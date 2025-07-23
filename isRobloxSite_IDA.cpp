@@ -28,7 +28,7 @@ char __cdecl RBX::Http::isRobloxSite(int url)
   v15 = 0;
   sub_578670(&v8);
   v3 = (const unsigned __int8 **)sub_5778B0((int)&v9, 0xAu);
-  v4 = mbscmp(*v3, "roblox.com") == 0;          // length check
+  v4 = mbscmp(*v3, "roblox.com") == 0;          // direct comparison
   v5 = v9 - 16;
   if ( _InterlockedDecrement((volatile signed __int32 *)(v9 - 16 + 12)) <= 0 )
     (*(void (__stdcall **)(int))(**(_DWORD **)v5 + 4))(v5);
@@ -39,7 +39,7 @@ char __cdecl RBX::Http::isRobloxSite(int url)
   {
     if ( v7 <= 0 )
       (*(void (__stdcall **)(int))(**(_DWORD **)v6 + 4))(v6);
-    return 1;                                   // is 10 chars
+    return 1;                                   //
   }
   else
   {
