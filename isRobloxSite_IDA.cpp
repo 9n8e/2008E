@@ -39,12 +39,12 @@ char __cdecl RBX::Http::isRobloxSite(int url)
   {
     if ( v7 <= 0 )
       (*(void (__stdcall **)(int))(**(_DWORD **)v6 + 4))(v6);
-    return 1;                                   //
+    return 1;                          
   }
   else
   {
     if ( v7 <= 0 )
       (*(void (__stdcall **)(int))(**(_DWORD **)v6 + 4))(v6);
-    return 0;                                   // is not 10 chars
+    return 0;                               
   }
 }
