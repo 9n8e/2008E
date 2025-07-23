@@ -19,7 +19,7 @@ char __cdecl RBX::Http::isRobloxSite(int url)
   v13 = 2;
   v14 = 4;
   v12 = 80;
-  v1 = mbsnbcpy_s(Dst, 0x21u, "http", 4u);      // proves isValidScheme did not exist
+  v1 = mbsnbcpy_s(Dst, 0x21u, "http", 4u);      // strncmp(scheme, "http", 4) // essentially a scheme check
   sub_56D440(v1);
   sub_409A10(url, 0);
   if ( v13 && (v13 <= 1 || v13 > 3) )
