@@ -7,8 +7,8 @@ namespace RBX {
         if (strncmp(scheme, "http", 4) !== 0) {
           return false;
         }
-        
-        return url == "roblox.com";
+
+        // a
       }
   }
 }
