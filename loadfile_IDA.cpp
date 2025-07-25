@@ -1,52 +1,58 @@
-int __stdcall RBX::ContentProvider::loadfile(
-        int a1,
-        char a2,
-        char ArgList,
-        int a4,
-        int a5,
-        int a6,
-        int a7,
-        unsigned int a8,
-        int a9)
+int __cdecl RBX::ContentProvider::loadfile(int L)
 {
-  int v9; // eax
-  int v10; // esi
-  char *p_ArgList; // eax
-  int v13; // eax
-  char v14; // [esp-24h] [ebp-84h] BYREF
-  int v15; // [esp-20h] [ebp-80h]
-  int v16; // [esp-1Ch] [ebp-7Ch]
-  int v17; // [esp-18h] [ebp-78h]
-  int v18; // [esp-14h] [ebp-74h]
-  int v19; // [esp-10h] [ebp-70h]
-  int v20; // [esp-Ch] [ebp-6Ch]
-  int v21; // [esp-4h] [ebp-64h]
-  int v22; // [esp+8h] [ebp-58h]
-  char *v23; // [esp+Ch] [ebp-54h]
-  int v24[7]; // [esp+10h] [ebp-50h] BYREF
-  char pExceptionObject[40]; // [esp+2Ch] [ebp-34h] BYREF
-  int v26; // [esp+5Ch] [ebp-4h]
+  int v1; // eax
+  int v2; // edi
+  char *v3; // eax
+  int v4; // esi
+  char v6[8]; // [esp-20h] [ebp-74h] BYREF
+  int v7; // [esp-18h] [ebp-6Ch]
+  int v8; // [esp-14h] [ebp-68h]
+  int v9; // [esp-10h] [ebp-64h]
+  int v10; // [esp-Ch] [ebp-60h]
+  unsigned int v11; // [esp-8h] [ebp-5Ch]
+  int v12; // [esp-4h] [ebp-58h]
+  char *v13; // [esp+8h] [ebp-4Ch]
+  int v14; // [esp+Ch] [ebp-48h] BYREF
+  char *FileName[6]; // [esp+10h] [ebp-44h] BYREF
+  char v16[28]; // [esp+28h] [ebp-2Ch] BYREF
+  int v17; // [esp+44h] [ebp-10h]
+  int v18; // [esp+50h] [ebp-4h]
 
-  v22 = 0;
-  v21 = 2;
-  v23 = &v14;
-  v26 = 1;
-  std::string::string(&v14, &a2);
-  v9 = sub_571450(v14, v15, v16, v17, v18, v19, v20, a9, (void *)v21);
-  v10 = v9;
-  if ( !v9 || !(unsigned __int8)sub_5709B0(v9) )
+  RBX::Security::Context::current();
+  RBX::Security::Context::requirePermission(1, (char)"loadfile");
+  v1 = sub_618840(L, -1);
+  std::string::string(v16, v1);
+  v18 = 0;
+  v17 = sub_560BF0();
+  v13 = v6;
+  v18 = 1;
+  std::string::string(v6, v16);
+  v12 = v17;
+  LOBYTE(v18) = 2;
+  sub_6101C0(L, 67);
+  sub_610210(L, -10002);
+  v2 = sub_60FED0(L, -1);
+  sub_60F9D0(L, -2);
+  sub_467500(v2);
+  LOBYTE(v18) = 1;
+  sub_571920((int)&v14, v6[0], v6[4], v7, v8, v9, v10, v11, v12);
+  v3 = FileName[0];
+  LOBYTE(v18) = 3;
+  if ( FileName[5] < (char *)0x10 )
+    v3 = (char *)FileName;
+  if ( sub_60F040(L, v3) )
   {
-    LOBYTE(p_ArgList) = ArgList;
-    if ( a8 < 0x10 )
-      p_ArgList = &ArgList;
-    v13 = RBX::runtime_error((int)v24, "Unable to load %s", (char)p_ArgList);
-    LOBYTE(v26) = 2;
-    sub_40A700((std::exception *)pExceptionObject, v13);
-    CxxThrowException(pExceptionObject, (_ThrowInfo *)&_TI2_AVruntime_error_std__);
+    sub_60FF90(L);
+    sub_60FA70(L, -2);
+    v4 = 2;
   }
-  std::string::string(a1, *(_DWORD *)(v10 + 8));
-  v22 = 1;
-  LOBYTE(v26) = 0;
-  std::string::~string(&a2);
-  return a1;
+  else
+  {
+    v4 = 1;
+  }
+  LOBYTE(v18) = 1;
+  std::string::~string(&v14);
+  v18 = -1;
+  std::string::~string(v16);
+  return v4;
 }
