@@ -1,67 +1,69 @@
-// pasted directly from IDA Pro with some comment additions
-char __cdecl RBX::Http::trustCheck(unsigned __int8 *url)
+char __cdecl RBX::Http::trustCheck(const char *url)
 {
   const unsigned __int8 **v2; // eax
   bool v3; // bl
-  int v4; // eax
+  char *v4; // eax
   unsigned __int8 *v5; // eax
-  unsigned __int8 **p_Str; // ecx
-  int v7; // eax
-  char v8; // bl
-  int v9; // [esp+4h] [ebp-125Ch] BYREF
-  unsigned __int8 *Str; // [esp+8h] [ebp-1258h] BYREF
-  int v11; // [esp+Ch] [ebp-1254h] BYREF
-  char Dst[33]; // [esp+10h] [ebp-1250h] BYREF
-  char Source[4615]; // [esp+31h] [ebp-122Fh] BYREF
-  int v14; // [esp+1238h] [ebp-28h]
-  int v15; // [esp+125Ch] [ebp-4h]
+  ATL::CPathT<ATL::CStringT<char,ATL::StrTraitATL<char,ATL::ChTraitsCRT<char> > > > *v6; // ecx
+  const ATL::CStringT<char,ATL::StrTraitATL<char,ATL::ChTraitsCRT<char> > > *v7; // eax
+  bool v8; // bl
+  ATL::CStringT<char,ATL::StrTraitATL<char,ATL::ChTraitsCRT<char> > > v9; // [esp+4h] [ebp-125Ch] BYREF
+  ATL::CStringT<char,ATL::StrTraitATL<char,ATL::ChTraitsCRT<char> > > v10; // [esp+8h] [ebp-1258h] BYREF
+  ATL::CStringT<char,ATL::StrTraitATL<char,ATL::ChTraitsCRT<char> > > v11; // [esp+Ch] [ebp-1254h] BYREF
+  ATL::CUrl v12; // [esp+10h] [ebp-1250h] BYREF
+  int v13; // [esp+125Ch] [ebp-4h]
 
-  sub_5689F0((void (*)(void))sub_576DB0, &dword_9519A4);
-  if ( kSkipTrustCheck ) // byte_000000, must be registry key
+  boost::call_once((void (__cdecl *)())RBX::initTrustCheck, &flagTrustCheck);
+  if ( skipTrustCheck )
     return 1;
-  v2 = (const unsigned __int8 **)sub_56F9E0(&v9, (unsigned int)"about:blank"); // temporary variable for std::string("about:blank");
+  ATL::CStringT<char,ATL::StrTraitATL<char,ATL::ChTraitsCRT<char>>>::CStringT<char,ATL::StrTraitATL<char,ATL::ChTraitsCRT<char>>>(
+    &v9,
+    "about:blank");
   if ( !url )
-    sub_401000(-2147467259);
-  v3 = mbscmp(*v2, url) == 0; // temporary variable for comparing about:blank to url
-  v4 = v9 - 16;
-  if ( _InterlockedDecrement((volatile signed __int32 *)(v9 - 16 + 12)) <= 0 )
-    (*(void (__stdcall **)(int))(**(_DWORD **)v4 + 4))(v4);
-  if ( v3 || RBX::Http::isRobloxSite((int)url) || (unsigned __int8)RBX::Http::isScript(url) ) // thank 2016 source for making me being able to recognize this
+    ATL::AtlThrowImpl(-2147467259);
+  v3 = __mbscmp(*v2, (const unsigned __int8 *)url) == 0;
+  v4 = v9.m_pszData - 16;
+  if ( _InterlockedDecrement((volatile signed __int32 *)v9.m_pszData - 1) <= 0 )
+    (*(void (__stdcall **)(char *))(**(_DWORD **)v4 + 4))(v4);
+  if ( v3 || RBX::Http::isRobloxSite(url) || RBX::Http::isScript(url) )
     return 1;
-  // have not done ANYTHING past here yet
-  sub_4081C0((unsigned __int8 *)Dst);
-  sub_409A10(url, 0);
-  if ( v14 && (v14 <= 1 || v14 > 3) )
+  ATL::CUrl::CUrl(&v12);
+  ATL::CUrl::CrackUrl(&v12, url, 0);
+  if ( v12.m_nScheme && (v12.m_nScheme <= ATL_URL_SCHEME_GOPHER || v12.m_nScheme > ATL_URL_SCHEME_HTTPS) )
   {
-    sub_56F9E0(&Str, (unsigned int)url);
-    if ( *((int *)Str - 3) >= 0 )
+    ATL::CStringT<char,ATL::StrTraitATL<char,ATL::ChTraitsCRT<char>>>::CStringT<char,ATL::StrTraitATL<char,ATL::ChTraitsCRT<char>>>(
+      &v10,
+      url);
+    if ( *((int *)v10.m_pszData - 3) >= 0 )
     {
-      v5 = mbsstr(Str, "res:");
+      v5 = __mbsstr((const unsigned __int8 *)v10.m_pszData, "res:");
       if ( v5 )
       {
-        if ( v5 == Str )
+        if ( v5 == (unsigned __int8 *)v10.m_pszData )
         {
-          p_Str = &Str;
+          v6 = (ATL::CPathT<ATL::CStringT<char,ATL::StrTraitATL<char,ATL::ChTraitsCRT<char> > > > *)&v10;
 LABEL_17:
-          sub_407C40(p_Str);
+          ATL::CPathT<ATL::CStringT<char,ATL::StrTraitATL<char,ATL::ChTraitsCRT<char>>>>::~CPathT<ATL::CStringT<char,ATL::StrTraitATL<char,ATL::ChTraitsCRT<char>>>>(v6);
           return 1;
         }
       }
     }
-    p_Str = &Str;
+    v6 = (ATL::CPathT<ATL::CStringT<char,ATL::StrTraitATL<char,ATL::ChTraitsCRT<char> > > > *)&v10;
   }
   else
   {
-    sub_56F9E0(&v9, (unsigned int)Source);
-    v15 = 0;
-    sub_578670(&v9);
-    v7 = sub_5778B0((int)&v11, 0x15u);
-    v8 = sub_576FD0(v7, "googlesyndication.com");
-    sub_407C40(&v11);
-    p_Str = (unsigned __int8 **)&v9;
+    ATL::CStringT<char,ATL::StrTraitATL<char,ATL::ChTraitsCRT<char>>>::CStringT<char,ATL::StrTraitATL<char,ATL::ChTraitsCRT<char>>>(
+      &v9,
+      v12.m_szHostName);
+    v13 = 0;
+    ATL::CStringT<char,ATL::StrTraitATL<char,ATL::ChTraitsCRT<char>>>::MakeLower(&v9);
+    v7 = ATL::CStringT<char,ATL::StrTraitATL<char,ATL::ChTraitsCRT<char>>>::Right(&v9, &v11, 21);
+    v8 = ATL::operator==(v7, "googlesyndication.com");
+    ATL::CPathT<ATL::CStringT<char,ATL::StrTraitATL<char,ATL::ChTraitsCRT<char>>>>::~CPathT<ATL::CStringT<char,ATL::StrTraitATL<char,ATL::ChTraitsCRT<char>>>>((ATL::CPathT<ATL::CStringT<char,ATL::StrTraitATL<char,ATL::ChTraitsCRT<char> > > > *)&v11);
+    v6 = (ATL::CPathT<ATL::CStringT<char,ATL::StrTraitATL<char,ATL::ChTraitsCRT<char> > > > *)&v9;
     if ( v8 )
       goto LABEL_17;
   }
-  sub_407C40(p_Str);
+  ATL::CPathT<ATL::CStringT<char,ATL::StrTraitATL<char,ATL::ChTraitsCRT<char>>>>::~CPathT<ATL::CStringT<char,ATL::StrTraitATL<char,ATL::ChTraitsCRT<char>>>>(v6);
   return 0;
 }
