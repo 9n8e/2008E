@@ -1,50 +1,48 @@
-char __cdecl RBX::Http::isRobloxSite(int url)
+char __cdecl RBX::Http::isRobloxSite(const char *url)
 {
-  errno_t v1; // eax
-  const unsigned __int8 **v3; // eax
+  int v1; // eax
+  ATL::CStringT<char,ATL::StrTraitATL<char,ATL::ChTraitsCRT<char> > > *v3; // eax
   bool v4; // bl
-  int v5; // eax
-  int v6; // eax
+  char *v5; // eax
+  char *v6; // eax
   int v7; // esi
-  int v8; // [esp+4h] [ebp-1258h] BYREF
-  int v9; // [esp+8h] [ebp-1254h] BYREF
-  unsigned __int8 Dst[33]; // [esp+Ch] [ebp-1250h] BYREF
-  char Source[4613]; // [esp+2Dh] [ebp-122Fh] BYREF
-  __int16 v12; // [esp+1232h] [ebp-2Ah]
-  int v13; // [esp+1234h] [ebp-28h]
-  int v14; // [esp+1238h] [ebp-24h]
-  int v15; // [esp+1258h] [ebp-4h]
+  ATL::CStringT<char,ATL::StrTraitATL<char,ATL::ChTraitsCRT<char> > > v8; // [esp+4h] [ebp-1258h] BYREF
+  ATL::CStringT<char,ATL::StrTraitATL<char,ATL::ChTraitsCRT<char> > > v9; // [esp+8h] [ebp-1254h] BYREF
+  ATL::CUrl v10; // [esp+Ch] [ebp-1250h] BYREF
+  int v11; // [esp+1258h] [ebp-4h]
 
-  sub_407450(Dst);
-  v13 = 2;
-  v14 = 4;
-  v12 = 80;
-  v1 = mbsnbcpy_s(Dst, 0x21u, "http", 4u);      // strncmp(scheme, "http", 4) // essentially a scheme check
-  sub_56D440(v1);
-  sub_409A10(url, 0);
-  if ( v13 && (v13 <= 1 || v13 > 3) )
+  ATL::CUrl::InitFields(&v10);
+  v10.m_nScheme = ATL_URL_SCHEME_HTTP;
+  v10.m_dwSchemeNameLength = 4;
+  v10.m_nPortNumber = 80;
+  v1 = __mbsnbcpy_s((unsigned __int8 *)&v10, 0x21u, "http", 4u);
+  ATL::AtlCrtErrorCheck(v1);
+  ATL::CUrl::CrackUrl(&v10, url, 0);
+  if ( v10.m_nScheme && (v10.m_nScheme <= ATL_URL_SCHEME_GOPHER || v10.m_nScheme > ATL_URL_SCHEME_HTTPS) )
     return 0;
-  sub_56F9E0(&v8, (unsigned int)Source);
-  v15 = 0;
-  sub_578670(&v8);
-  v3 = (const unsigned __int8 **)sub_5778B0((int)&v9, 0xAu);
-  v4 = mbscmp(*v3, "roblox.com") == 0;          // direct comparison
-  v5 = v9 - 16;
-  if ( _InterlockedDecrement((volatile signed __int32 *)(v9 - 16 + 12)) <= 0 )
-    (*(void (__stdcall **)(int))(**(_DWORD **)v5 + 4))(v5);
-  v6 = v8 - 16;
-  v15 = -1;
-  v7 = _InterlockedDecrement((volatile signed __int32 *)(v8 - 16 + 12));
-  if ( v4 )                                     // if (mbscmp(*v3, "roblox.com") == 0) 
+  ATL::CStringT<char,ATL::StrTraitATL<char,ATL::ChTraitsCRT<char>>>::CStringT<char,ATL::StrTraitATL<char,ATL::ChTraitsCRT<char>>>(
+    &v8,
+    v10.m_szHostName);
+  v11 = 0;
+  ATL::CStringT<char,ATL::StrTraitATL<char,ATL::ChTraitsCRT<char>>>::MakeLower(&v8);
+  v3 = ATL::CStringT<char,ATL::StrTraitATL<char,ATL::ChTraitsCRT<char>>>::Right(&v8, &v9, 10);
+  v4 = __mbscmp((const unsigned __int8 *)v3->m_pszData, "roblox.com") == 0;
+  v5 = v9.m_pszData - 16;
+  if ( _InterlockedDecrement((volatile signed __int32 *)v9.m_pszData - 1) <= 0 )
+    (*(void (__stdcall **)(char *))(**(_DWORD **)v5 + 4))(v5);
+  v6 = v8.m_pszData - 16;
+  v11 = -1;
+  v7 = _InterlockedDecrement((volatile signed __int32 *)v8.m_pszData - 1);
+  if ( v4 )
   {
     if ( v7 <= 0 )
-      (*(void (__stdcall **)(int))(**(_DWORD **)v6 + 4))(v6);
-    return 1;                          
+      (*(void (__stdcall **)(char *))(**(_DWORD **)v6 + 4))(v6);
+    return 1;
   }
   else
   {
     if ( v7 <= 0 )
-      (*(void (__stdcall **)(int))(**(_DWORD **)v6 + 4))(v6);
-    return 0;                               
+      (*(void (__stdcall **)(char *))(**(_DWORD **)v6 + 4))(v6);
+    return 0;
   }
 }
