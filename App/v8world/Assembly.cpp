@@ -83,12 +83,12 @@ namespace RBX {
     void Assembly::addRigidChild(RBX::Primitive* parent, RBX::RigidJoint* r, RBX::Primitive* child) {
         RBX::Clump* clump = parent->getClump();
         child->setClump(clump);
-        child->clumpDepth = parent->clumpDepth + 1;
-        child->body->setParent(parent->body);
-        RBX::Body* body = child->body;
+        child->setClumpDepth(parent->getClumpDepth() + 1); ;
+        child->getBody()->setParent(parent->getBody());
+        RBX::Body* body = child->getBody();
 
         G3D::CoordinateFrame* result;
-        G3D::CoordinateFrame* ChildInParent = r->getChildInParent(&result, parent, child);
+        G3D::CoordinateFrame* ChildInParent = r->getChildInParent( parent, child);
         body->setMeInParent(ChildInParent);
 
         clump->maxRadius.dirty = true;
