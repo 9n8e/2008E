@@ -119,28 +119,27 @@ namespace RBX {
         }
     }
 
-    double computeMaxRadius() {
+    float Assembly::computeMaxRadius() const {
         float offset = 0.0;
         RBX::PrimIterator it = RBX::PrimIterator::begin(this->rootPrimitive, RBX::PrimIterator::IN_ASSEMBLY);
         RBX::PrimIterator end = RBX::PrimIterator::end(RBX::PrimIterator::IN_ASSEMBLY);
-        G3D::Vector3 centerOfMass;
-        this->rootPrimitive->body->getBranchCofmPos(centerOfMass);
+        G3D::Vector3 centerOfMass = this->rootPrimitive->getBody()->getBranchCofmPos();
 
         for (it; it != end; ++it) {
             RBX::Primitive* primitive =* it;
 
-            RBX::Body* body = primitive->body;
-            body->updatePV();
+            RBX::Body* body = primitive->getBody();
+            // body->updatePV();
 
-            const G3D::Vector3& pos = body->pv.position.translation;
+            const G3D::Vector3& pos = body->getPV().position.translation;
             G3D::Vector3 offsetCenter(
                 pos.x - centerOfMass.x,
                 pos.y - centerOfMass.y,
                 pos.z - centerOfMass.z
             );
 
-            G3D::Vector3 absOffset;
-            RBX::Math::vector3Abs(absOffset, offsetCenter);
+            G3D::Vector3 absOffset = RBX::Math::vector3Abs(offsetCenter);
+            
 
             const RBX::Extents& extents = primitive->getExtentsWorld();
             const G3D::Vector3 size = extents->size();
