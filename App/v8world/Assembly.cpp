@@ -165,7 +165,7 @@ namespace RBX {
     }
 
     RBX::EdgeIterator Assembly::externalEdgeBegin() const {
-        RBX::EdgeIterator edge = RBX::EdgeIterator();
+        RBX::EdgeIterator edge = RBX::EdgeIterator(this->rootPrimitive, RBX::Edge(NULL, NULL));
         edge.begin(this->rootPrimitive);
         return edge;
     }
