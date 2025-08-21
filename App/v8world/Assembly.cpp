@@ -88,13 +88,13 @@ namespace RBX {
         RBX::Body* body = child->getBody();
 
         G3D::CoordinateFrame* result;
-        G3D::CoordinateFrame* ChildInParent = r->getChildInParent( parent, child);
+        G3D::CoordinateFrame ChildInParent = r->getChildInParent(parent, child);
         body->setMeInParent(ChildInParent);
 
-        clump->maxRadius.dirty = true;
-        clump->canSleep.dirty = true;
+        clump->maxRadius.setDirty();
+        clump->canSleep.setDirty();
         if (clump->parent) {
-            onPrimitivesChanged(clump->parent);
+            clump->parent->onPrimitivesChanged();
         }
     }
 
