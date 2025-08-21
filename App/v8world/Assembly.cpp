@@ -108,7 +108,7 @@ namespace RBX {
         return prim;
     }
 
-    bool Assembly::computeCanSleep() {
+    bool Assembly::computeCanSleep() const {
         RBX::PrimIterator it = RBX::PrimIterator::begin(this->rootPrimitive, RBX::PrimIterator::IN_ASSEMBLY);
 
         while (it != RBX::PrimIterator::end(RBX::PrimIterator::IN_ASSEMBLY)) {
