@@ -182,7 +182,7 @@ namespace RBX {
         return this->getAnchored() != false;
     }
 
-    const RBX::Primitive getAssemblyPrimitiveConst() {
+    const RBX::Primitive *Assembly::getAssemblyPrimitiveConst() const {
         if (this->parent) {
             return this->parent->getRootAssembly()->rootPrimitive;
         }
