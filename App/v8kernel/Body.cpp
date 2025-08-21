@@ -359,12 +359,12 @@ namespace RBX {
 
         void Body::onChildRemoved(RBX::Body* child) {
             int index = this->index;
-            RBX::Body* data = this->children.array.data;
+            G3D::Array<Body *> data = children.underlyingArray();
             RBX::Body* v5 = data[index];
             v5->index = index;
-            G3D::Array<RBX::Body* >::resize(&this->children.array, this->children.array.num - 1, 0);
+            children.underlyingArray().resize(children.underlyingArray().size() - 1, false);
             child->index = -1;
-            if (!this->children.array.num) {
+            if (!this->children.underlyingArray().size()) {
                 delete this->cofm;
                 this->cofm = NULL;
             }
@@ -402,13 +402,14 @@ namespace RBX {
                 }
             }
 
-            child->index = this->children.array.num;
-            G3D::Array<RBX::Body* >::append(&this->children.array, &child);
+            child->index = children.underlyingArray().size();
+            this->children.underlyingArray().append(child);
+            //G3D::Array<RBX::Body* >::append(&this->children.array, &child);
             if (!this->cofm) {
                 RBX::Body* child = new RBX::Body;
                 if (child) {
-                    child->cofm = new RBX::Cofm;
-                    this->cofm = new RBX::Cofm;
+                    *child->cofm = Cofm(child);
+                    *this->cofm = Cofm(this);
                 } else {
                     this->cofm = NULL;
                 }
