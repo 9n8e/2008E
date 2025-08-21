@@ -71,11 +71,11 @@ namespace RBX {
         child->getBody()->setParent(parent->getBody());
         RBX::Body* body = child->getBody();
 
-        RBX::RevoluteLink* rLink = RBX::MotorJoint::resetLink(m);
+        RBX::RevoluteLink* rLink = m->resetLink();
         body->setMeInParent(rLink);
     }
 
-    void addRigidChild(RBX::Primitive* parent, RBX::RigidJoint* r, RBX::Primitve* child) {
+    void Assembly::addRigidChild(RBX::Primitive* parent, RBX::RigidJoint* r, RBX::Primitve* child) {
         RBX::Clump* clump = parent->clump;
         child->setClump(clump);
         child->clumpDepth = parent->clumpDepth + 1;
