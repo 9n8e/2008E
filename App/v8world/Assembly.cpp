@@ -99,13 +99,13 @@ namespace RBX {
     }
 
     RBX::PrimIterator Assembly::assemblyPrimBegin() const {
-        return PrimIterator(this->rootPrimitive, RBX::PrimIterator::SearchType::IN_ASSEMBLY)*;
+        RBX::PrimIterator prim = RBX::PrimIterator(this->rootPrimitive, RBX::PrimIterator::SearchType::IN_ASSEMBLY);
+        return prim;
     }
 
     RBX::PrimIterator Assembly::assemblyPrimEnd() const {
-        result->primitive = NULL;
-        result->searchType = RBX::PrimIterator::SearchType::IN_ASSEMBLY;
-        return result;
+        RBX::PrimIterator prim = RBX::PrimIterator(NULL, RBX::PrimIterator::SearchType::IN_ASSEMBLY);
+        return prim;
     }
 
     bool Assembly::computeCanSleep() {
