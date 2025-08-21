@@ -50,7 +50,8 @@ namespace RBX {
         RBX::Assembly* parent = clump->parent;
         if (parent) {
             p = dynamic_cast<RBX::Primitive*>(clump);
-            RBX::fastRemoveShort<RBX::Assembly* >(&parent->children, &p);
+            //RBX::fastRemoveShort<RBX::Assembly* >(&parent->children, &p);
+            RBX::fastRemoveShort(&parent->children, &p);
 
             parent->maxRadius.setDirty();
             parent->canSleep.setDirty();
@@ -79,8 +80,8 @@ namespace RBX {
         body->setMeInParent(rLink);
     }
 
-    void Assembly::addRigidChild(RBX::Primitive* parent, RBX::RigidJoint* r, RBX::Primitve* child) {
-        RBX::Clump* clump = parent->clump;
+    void Assembly::addRigidChild(RBX::Primitive* parent, RBX::RigidJoint* r, RBX::Primitive* child) {
+        RBX::Clump* clump = parent->getClump();
         child->setClump(clump);
         child->clumpDepth = parent->clumpDepth + 1;
         child->body->setParent(parent->body);

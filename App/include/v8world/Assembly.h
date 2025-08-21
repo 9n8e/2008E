@@ -17,6 +17,8 @@
 #include "util/ComputeProp.h"
 
 namespace RBX {
+    int fastRemoveShort(std::vector<RBX::SimJobTracker *> *vec, RBX::SimJobTracker **item) {}
+
     class Assembly : public RBX::IPipelined {
     private: 
         RBX::SleepInfo* sleepInfo;
