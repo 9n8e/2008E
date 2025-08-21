@@ -2,6 +2,7 @@
 
 #include "v8world/Assembly.h"
 #include "v8world/Clump.h"
+#include "v8world/Contact.h"
 
 #include "util/Vector3int32.h"
 #include "util/Extents.h"

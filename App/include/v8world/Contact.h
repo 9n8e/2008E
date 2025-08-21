@@ -1,6 +1,8 @@
 #pragma once
+
 #include "v8world/Edge.h"
 #include "v8world/Primitive.h"
+#include "v8world/Geometry.h"
 
 #include "v8kernel/Body.h"
 #include "v8kernel/Kernel.h"

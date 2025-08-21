@@ -3,6 +3,7 @@
 #include "util/NormalId.h"
 
 #include "v8kernel/Body.h"
+#include "v8kernel/Pair.h"
 
 #include "G3D/Vector3.h"
 
