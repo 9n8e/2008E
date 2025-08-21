@@ -1,4 +1,8 @@
+#pragma once
+
 #include "v8world/Assembly.h"
+#include "v8world/Clump.h"
+
 #include "util/Debug.h"
 
 namespace RBX {
@@ -45,7 +49,7 @@ namespace RBX {
 
         RBX::Assembly* parent = clump->parent;
         if (parent) {
-            p = static_cast<RBX::Primitive*>(clump);
+            p = dynamic_cast<RBX::Primitive*>(clump);
             RBX::fastRemoveShort<RBX::Assembly* >(&parent->children, &p);
 
             parent->maxRadius.setDirty();
@@ -55,8 +59,8 @@ namespace RBX {
             }
 
             clump->parent = NULL;
-            clump->maxRadius.dirty = true;
-            clump->canSleep.dirty = true;
+            clump->maxRadius.setDirty();
+            clump->canSleep.setDirty();
             if (clump->parent) {
                 clump->parent->onPrimitivesChanged();
             }
@@ -64,7 +68,7 @@ namespace RBX {
     }
 
     void Assembly::addMotorChild(RBX::Primitive* parent, RBX::MotorJoint* m, RBX::Primitive* child) {
-        RBX::Clump* clump = parent->clump;
+        RBX::Clump* clump = parent->getClump();
         child->setClumpDepth(parent->getClumpDepth() + 1); 
         child->getClump()->setParent(clump);
 
