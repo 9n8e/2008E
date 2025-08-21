@@ -78,7 +78,9 @@ namespace RBX {
         ~Body();
 
         void step(float, bool);
+        IndexArray<Body, Body::getIndex> getChildren();
         bool cofmIsClean();
+        Cofm getCofm() {return *cofm;};
         void makeCofmDirty();
         void advanceStateIndex();
         void makeStateDirty();

@@ -7,15 +7,15 @@ namespace RBX {
         float mass;
         G3D::Matrix3 moment;
         
-        void updateIfDirty() const;
+        void updateIfDirty();
     public:
         Cofm(const Cofm&);
         Cofm(Body*);
-        bool getIsDirty() const;
+        bool getIsDirty();
         void makeDirty();
         const G3D::Vector3& getCofmInBody();
-        const float getMass() const;
-        const G3D::Matrix3& getMoment() const;
+        const float getMass();
+        const G3D::Matrix3& getMoment();
         Cofm& operator=(const Cofm&);
     };
 }

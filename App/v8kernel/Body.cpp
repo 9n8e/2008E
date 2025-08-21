@@ -67,6 +67,10 @@ namespace RBX {
             return state;
         }
 
+        IndexArray<Body, Body::getIndex> Body::getChildren() {
+            return children;
+        }
+
         void Body::advanceStateIndex() {
             int state = this->index;
             ++state;
