@@ -134,10 +134,27 @@ namespace RBX {
         static RBX::Primitive* downstreamPrimitive(RBX::Joint*);
     };
     class PrimIterator {
+    private:
+        RBX::Primitive* primitive; 
+        RBX::PrimIterator::SearchType searchType;
+        PrimIterator(RBX::Primitive*, RBX::PrimIterator::SearchType);
+        static bool isParent(RBX::Primitive*, RBX::Primitive*, RBX::Joint*, RBX::PrimIterator::SearchType);
+        static RBX::Primitive* findFirstChild(RBX::Primitive*, RBX::PrimIterator::SearchType);
+        static RBX::Primitive* findNextSibling(RBX::Primitive*, RBX::Primitive*, RBX::PrimIterator::SearchType);
+        static RBX::Primitive* findNextRelative(RBX::Primitive*, RBX::Primitive*, RBX::PrimIterator::SearchType);
     public:
         enum SearchType {
             IN_CLUMP = 0x0000,
             IN_ASSEMBLY = 0x0001,
         };
+        
+        RBX::Primitive* operator*() const;
+        bool operator==(const RBX::PrimIterator&) const;
+        bool operator!=(const RBX::PrimIterator&) const;
+        RBX::PrimIterator& operator++();
+        static RBX::PrimIterator begin(RBX::Primitive*, RBX::PrimIterator::SearchType);
+        static RBX::PrimIterator end(RBX::PrimIterator::SearchType);
+        static RBX::Primitive* getNextPrimitive(RBX::Primitive*, RBX::PrimIterator::SearchType);
+        static RBX::Primitive* findParent(RBX::Primitive*, RBX::PrimIterator::SearchType);
     };
 }
