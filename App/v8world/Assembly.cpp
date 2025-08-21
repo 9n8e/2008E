@@ -98,19 +98,17 @@ namespace RBX {
         }
     }
 
-    RBX::PrimIterator assemblyPrimBegin(RBX::PrimIterator* result) {
-        result->primitive = this->rootPrimitive;
-        result->searchType = RBX::PrimIterator::SearchType::IN_ASSEMBLY;
-        return result;
+    RBX::PrimIterator Assembly::assemblyPrimBegin() const {
+        return PrimIterator(this->rootPrimitive, RBX::PrimIterator::SearchType::IN_ASSEMBLY)*;
     }
 
-    RBX::PrimIterator assemblyPrimEnd(RBX::PrimIterator* result) {
+    RBX::PrimIterator Assembly::assemblyPrimEnd() const {
         result->primitive = NULL;
         result->searchType = RBX::PrimIterator::SearchType::IN_ASSEMBLY;
         return result;
     }
 
-    bool computeCanSleep() {
+    bool Assembly::computeCanSleep() {
         RBX::PrimIterator it = RBX::PrimIterator::begin(this->rootPrimitive, RBX::PrimIterator::IN_ASSEMBLY);
 
         while (it != RBX::PrimIterator::end(RBX::PrimIterator::IN_ASSEMBLY)) {
