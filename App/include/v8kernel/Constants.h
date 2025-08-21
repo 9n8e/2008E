@@ -14,7 +14,8 @@ namespace RBX {
         static const float LEGO_DEFAULT_ELASTIC_K();
         static const float unitJointK();
         static const float getJointKMultiplier(const G3D::Vector3&, bool);
-    public: static const int uiStepsPerSec();
+    public: 
+        static const int uiStepsPerSec();
         static const int worldStepsPerUiStep();
         static const int kernelStepsPerWorldStep();
         static const int worldStepsPerSec();
