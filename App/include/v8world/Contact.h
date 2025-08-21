@@ -39,4 +39,31 @@ namespace RBX {
         RBX::Contact& operator=(const RBX::Contact&);
         static bool isContact(RBX::Edge*);
     };
+    class ContactConnector : public Contact {
+    protected: 
+        RBX::GeoPair geoPair;
+        float k;
+        float kFriction;
+        float kNeg;
+        float firstApproach;
+        float threshold;
+        float forceMagLast;
+        G3D::Vector3 frictionOffset;
+
+    public: 
+        ContactConnector(const RBX::ContactConnector&);
+        ContactConnector(float, float, float);
+        void reset();
+        void setBallBall(RBX::Body*, RBX::Body*, float, float);
+        void setBallBlock(RBX::Body*, RBX::Body*, float, const G3D::Vector3*, RBX::NormalId, RBX::GeoPairType);
+        void setPointPlane(RBX::Body*, RBX::Body*, const G3D::Vector3*, const G3D::Vector3*, int32_t, RBX::NormalId);
+        void setEdgeEdgePlane(RBX::Body*, RBX::Body*, const G3D::Vector3*, const G3D::Vector3*, RBX::NormalId, RBX::NormalId, RBX::NormalId, float);
+        void setEdgeEdge(RBX::Body*, RBX::Body*, const G3D::Vector3*, const G3D::Vector3*, RBX::NormalId, RBX::NormalId);
+        bool match(RBX::Body*, RBX::Body*, RBX::GeoPairType, int32_t, int32_t);
+        virtual void computeForce(const float, bool);
+        virtual bool canThrottle() const;
+        virtual ~ContactConnector();
+        RBX::ContactConnector& operator=(const RBX::ContactConnector&);
+        virtual void* __vecDelDtor(uint32_t);
+    };
 }
