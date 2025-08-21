@@ -178,13 +178,8 @@ namespace RBX {
         // return result;
     }
 
-    bool getAnchored() {
-        RBX::Assembly* RootAssembly = this;
-        if (this->parent) {
-            RootAssembly = this->parent->getRootAssembly();
-        }
-
-        return RootAssembly->rootPrimitive->getAnchored != 0;
+    bool Assembly::getAnchored() const {
+        return this->getAnchored() != false;
     }
 
     const RBX::Primitive getAssemblyPrimitiveConst() {
