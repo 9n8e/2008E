@@ -3,5 +3,7 @@
 #include "v8world/Joint.h"
 
 namespace RBX {
-    class MotorJoint : public Joint {};
+    class MotorJoint : public Joint {
+        
+    };
 }

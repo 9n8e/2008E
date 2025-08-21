@@ -1,46 +1,46 @@
 #include "v8world/Assembly.h"
+#include "util/Debug.h"
 
 namespace RBX {
     // note: list initializer - did not exist in c98, added in c11
     Assembly::Assembly(RBX::Primitive* root) {
         // this->currentStage = NULL;
-        this->sleepInfo = NULL;
+        // this->sleepInfo = NULL;
         this->rootPrimitive = root;
-        this->parent = NULL;
-        this->children._Myfirst = 0;
-        this->children._Mylast = 0;
-        this->children._Myend = 0;
-        this->simJob = 0;
-        this->maxRadius.getFunc = &computeMaxRadius();
-        this->maxRadius.dirty = 1;
-        this->maxRadius.object = this;
+        // this->parent = NULL;
+        // this->children._Myfirst = 0;
+        // this->children._Mylast = 0;
+        // this->children._Myend = 0;
+        // this->simJob = 0;
+        // this->maxRadius.getFunc = &computeMaxRadius();
+        // this->maxRadius.setDirty();
+        // this->maxRadius.object = this;
         //* ((_DWORD* )&this->maxRadius.getFunc + 1) = 0; - signals that .getFunc takes a reference to a function
-        this->canSleep.dirty = 1;
-        this->canSleep.object = this;
-        this->canSleep.getFunc = &computeCanSleep();
+        // this->canSleep.setDirty();
+        // this->canSleep.object = this;
+        // this->canSleep.getFunc = &computeCanSleep();
         //* ((_DWORD* )&this->canSleep.getFunc + 1) = 0;
-        root->setClump(this);
+        // root->setClump(this);
     }
 
-    void addChild(RBX::Assembly* child) {
-        std::vector<RBX::Assembly *>* p_children = &this->children;
-        RBX::Assembly* *Mylast = p_children.begin();
-        RBX::Assembly* *Myfirst = p_children.end();
+    void Assembly::addChild(RBX::Assembly* child) {
+        std::vector<RBX::Assembly *, std::allocator<RBX::Assembly *>> p_children = this->children;
 
-        RBXASSERT(Myfirst > Mylast);
+        RBXASSERT(p_children.begin() > p_children.end());
 
         this->children.push_back(child);
+        /* TBD
         std::sort(
-            Myfirst,
-            Mylast,
-            Myfirst - Mylast,
+            p_children.begin(),
+            p_children.end(),
+            p_children.begin() - p_children.end(),
             RBX::lessAssembly
-        );
+        ); */
     }
 
-    void addGroundChild(RBX::Primitive* p) {
-        RBX::Body* body = p->body;
-        RBX::Clump* clump = p->clump;
+    void Assembly::addGroundChild(RBX::Primitive* p) {
+        RBX::Body* body = p->getBody();
+        RBX::Clump* clump = p->getClump();
         body->setParent(NULL);
 
         RBX::Assembly* parent = clump->parent;
@@ -48,28 +48,28 @@ namespace RBX {
             p = static_cast<RBX::Primitive*>(clump);
             RBX::fastRemoveShort<RBX::Assembly* >(&parent->children, &p);
 
-            parent->maxRadius.dirty = true;
-            parent->canSleep.dirty = true;
+            parent->maxRadius.setDirty();
+            parent->canSleep.setDirty();
             if (parent->parent) {
-                onPrimitivesChanged(parent->parent);
+                parent->parent->onPrimitivesChanged();
             }
 
             clump->parent = NULL;
             clump->maxRadius.dirty = true;
             clump->canSleep.dirty = true;
             if (clump->parent) {
-                onPrimitivesChanged(clump->parent);
+                clump->parent->onPrimitivesChanged();
             }
         }
     }
 
-    void addMotorChild(RBX::Primitive* parent, RBX::MotorJoint* m, RBX::Primitive* child) {
+    void Assembly::addMotorChild(RBX::Primitive* parent, RBX::MotorJoint* m, RBX::Primitive* child) {
         RBX::Clump* clump = parent->clump;
-        child->clumpDepth = parent->clumpDepth + 1;
-        setParent(child->clump, clump);
+        child->setClumpDepth(parent->getClumpDepth() + 1); 
+        child->getClump()->setParent(clump);
 
-        child->body->setParent(parent->body);
-        RBX::Body* body = child->body;
+        child->getBody()->setParent(parent->getBody());
+        RBX::Body* body = child->getBody();
 
         RBX::RevoluteLink* rLink = RBX::MotorJoint::resetLink(m);
         body->setMeInParent(rLink);

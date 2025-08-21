@@ -1,14 +1,13 @@
 namespace RBX {
     template <class F, class B>
     class ComputeProp {
-        private: 
+    private: 
         bool val;
         bool dirty;
-        RBX::Assembly* object;
-        bool (RBX::Assembly::* getFunc)();
-        
+        B* object;
+        F (B::* getFunc)();
     public: 
-        void ComputeProp<bool,RBX::Assembly>(RBX::Assembly*, bool (RBX::Assembly::*)());
+        ComputeProp<F,B>(B*, F (B::*)());
         bool getValue() const;
         bool operator bool() const;
         const bool* getValuePointer() const;
