@@ -135,8 +135,7 @@ namespace RBX {
     };
     class PrimIterator {
     private:
-        RBX::Primitive* primitive; 
-        RBX::PrimIterator::SearchType searchType;
+        
         PrimIterator(RBX::Primitive*, RBX::PrimIterator::SearchType);
         static bool isParent(RBX::Primitive*, RBX::Primitive*, RBX::Joint*, RBX::PrimIterator::SearchType);
         static RBX::Primitive* findFirstChild(RBX::Primitive*, RBX::PrimIterator::SearchType);
@@ -147,7 +146,9 @@ namespace RBX {
             IN_CLUMP = 0x0000,
             IN_ASSEMBLY = 0x0001,
         };
-        
+
+        RBX::Primitive* primitive; 
+        RBX::PrimIterator::SearchType searchType;
         RBX::Primitive* operator*() const;
         bool operator==(const RBX::PrimIterator&) const;
         bool operator!=(const RBX::PrimIterator&) const;
