@@ -165,16 +165,17 @@ namespace RBX {
     }
 
     RBX::EdgeIterator Assembly::externalEdgeBegin() const {
-        RBX::EdgeIterator edge = RBX::EdgeIterator(this->rootPrimitive, RBX::Edge(NULL, NULL));
-        edge.begin(this->rootPrimitive);
-        return edge;
+        // tbd here
+        // RBX::EdgeIterator edge = RBX::EdgeIterator(this->rootPrimitive, RBX::Edge(NULL, NULL));
+        // edge.begin(this->rootPrimitive);
+        // return edge;
     }
 
     RBX::EdgeIterator externalEdgeEnd(RBX::EdgeIterator* result) {
-        //tbd here
-        result->primitive = result->end();
-        result->edge = new RBX::Edge;
-        return result;
+        // tbd here
+        // result->primitive = result->end();
+        // result->edge = new RBX::Edge;
+        // return result;
     }
 
     bool getAnchored() {
