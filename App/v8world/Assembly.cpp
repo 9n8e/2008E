@@ -191,32 +191,31 @@ namespace RBX {
         return this->rootPrimitive;
     }
 
-    RBX::Contact getJointToParent(RBX::Primitive* p) {
-        RBX::Primitive prim0;
-        RBX::Contact jointOwner = RBX::Joint::getJointOwner(p);
-        if (!jointOwner) {
-            return false;
-        }
+    RBX::Contact getJointToParent(RBX::Primitive *p) {
+        RBX::Primitive *prim0;
+        //RBX::Contact *jointOwner = p->getJoint(p, prim0)->getJointOwner();
+        RBX::Contact* jointOwner = dynamic_cast<RBX::Contact*>(p->getJoint(p, prim0)->getJointOwner());
 
+        RBXASSERT(!&jointOwner);
+        
         while (true) {
-            if (LOBYTE(result->steppingIndex)) {
-                prim0 = result->prim0; // inherited from RBX::Edge
+            if (LOBYTE(jointOwner->steppingIndexFunc())) {
+                prim0 = jointOwner->getPrimitive(0); // yea i dont know wtf im doing here
                 if (p == prim0) {
-                    prim0 = result->prim1;
+                    prim0 = jointOwner->getPrimitive(1); // previously 'result->prim1';
                 }
 
-                if (!prim0 || p->body->parent == prim0->body) {
+                if (!prim0 || p->getBody()->getParent() == prim0->getBody()) {
                     break;
                 }
             }
 
             jointOwner = p->getNextContact(jointOwner);
-            if (!jointOwner) {
-                return false;
-            }
+
+            RBXASSERT(!jointOwner);
         }
 
-        return jointOwner;
+        return *jointOwner;
     }
 
     RBX::MotorJoint getMotorConst(int motorId) {

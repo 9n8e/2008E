@@ -13,8 +13,8 @@ namespace RBX {
         G3D::CoordinateFrame jointCoord0;
         G3D::CoordinateFrame jointCoord1;
         virtual RBX::Edge::EdgeType getEdgeType() const;
-        void Joint(RBX::Primitive*, RBX::Primitive*, const G3D::CoordinateFrame&, const G3D::CoordinateFrame&);
-        void Joint();
+        Joint(RBX::Primitive*, RBX::Primitive*, const G3D::CoordinateFrame&, const G3D::CoordinateFrame&);
+        Joint();
         static bool canBuildJointLoose(RBX::Primitive*, RBX::Primitive*, RBX::NormalId, RBX::NormalId);
         static bool canBuildJointTight(RBX::Primitive*, RBX::Primitive*, RBX::NormalId, RBX::NormalId);
 
@@ -58,5 +58,11 @@ namespace RBX {
         static bool isAssemblyJoint(RBX::Edge*);
         static bool isGroundJoint(RBX::Joint*);
         static bool isAutoJoinJoint(RBX::Joint*);
+    };
+    
+    class IJointOwner {
+        public:
+            virtual IJointOwner();
+            virtual ~IJointOwner();
     };
 }
