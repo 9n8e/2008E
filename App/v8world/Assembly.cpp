@@ -3,6 +3,8 @@
 #include "v8world/Assembly.h"
 #include "v8world/Clump.h"
 
+#include "util/Vector3int32.h"
+#include "util/Extents.h"
 #include "util/Debug.h"
 
 namespace RBX {
@@ -142,7 +144,7 @@ namespace RBX {
             
 
             const RBX::Extents& extents = primitive->getExtentsWorld();
-            const G3D::Vector3 size = extents->size();
+            const G3D::Vector3 size = extents.size();
 
             float hx = size.x*  0.5;
             float hy = size.y*  0.5;
@@ -162,9 +164,10 @@ namespace RBX {
         return offset;
     }
 
-    RBX::EdgeIterator externalEdgeBegin(RBX::EdgeIterator* result) {
-        result->begin(this->rootPrimitive);
-        return result;
+    RBX::EdgeIterator Assembly::externalEdgeBegin() const {
+        RBX::EdgeIterator edge = RBX::EdgeIterator();
+        edge.begin(this->rootPrimitive);
+        return edge;
     }
 
     RBX::EdgeIterator externalEdgeEnd(RBX::EdgeIterator* result) {
