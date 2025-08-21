@@ -218,8 +218,8 @@ namespace RBX {
         return *jointOwner;
     }
 
-    RBX::MotorJoint getMotorConst(int motorId) {
-        return this->getMotorImp(&motorId);
+    const RBX::MotorJoint *Assembly::getMotorConst(uint32_t motorId) const {
+        return this->getMotorImp(motorId);
     }
 
     const RBX::MotorJoint getMotorImp(int motorId) {
