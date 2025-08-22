@@ -5,6 +5,8 @@ namespace RBX {
 	boost::once_flag mooFlag = BOOST_ONCE_INIT;
 
 	void declareNullName();
+	void initMoo();
+	boost::mutex moo2();
 
 	class Name
 	{
@@ -18,7 +20,7 @@ namespace RBX {
 		template <typename T>
 		static Name *doDeclare();
 
-		static Name *declare(char *name, bool length); // Name * __cdecl RBX::Name::declare(char *param_1,int param_2), param_2 might be length due to param_2 != -1
+		static Name *declare(const char *name, int dictionaryIndex); // Name * __cdecl RBX::Name::declare(char *param_1,int param_2), param_2 might be length due to param_2 != -1
 		static Name *getNullName() { boost::call_once(declareNullName, &nullNameFlag); return *nullName; };
 
 		static int compare(Name *nameA, Name *nameB);
@@ -27,6 +29,10 @@ namespace RBX {
 		static Name *lookup(char *str);
 		static NamMap *namMap();
 		bool empty();
+
+		// might be private, might be public, who knows
+		std::string name;
+		int dictionaryIndex;
 	};
 	class Name::NamMap : std::map<int, Name *, std::less<int>, std::allocator<std::pair<int const, Name *>>> {
 	public:
