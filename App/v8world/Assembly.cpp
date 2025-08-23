@@ -369,17 +369,16 @@ namespace RBX {
         }
     }
 
-    void stepUi(int uiStepId) {
+    void Assembly::stepUi(int uiStepId) {
         int motors = this->numMotors();
         int count = 0;
-        RBX::MotorJoint motorImp;
 
         if (motors) {
             int stepId = uiStepId;
             do {
                 uiStepId = count;
-                motorImp = this->getMotorImp(&uiStepId);
-                motorImp->stepUi(motorImp, stepId)
+                RBX::MotorJoint motorImp = *this->getMotorImp(uiStepId);
+                motorImp.stepUi(stepId);
                 ++count;
             } while (count < motors);
         }
