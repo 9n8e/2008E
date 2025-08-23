@@ -10,6 +10,15 @@
 
 
 namespace RBX {
+    struct RaiseRange {
+    public: 
+        int index;
+        int upper;
+        RBX::RaiseRange* previous;
+
+        void removeIndex(int);
+    };
+
     template<class F, class B>
     class Listener {
     protected: 
