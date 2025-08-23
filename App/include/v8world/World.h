@@ -63,7 +63,7 @@ namespace RBX {
         void removeListener(RBX::Listener<F, B>*) const;
     };
 
-    class World : public RBX::Notifier<RBX::World, RBX::AutoJoin> : public RBX::Notifier<RBX::World, RBX::AutoDestroy> {
+    class World : public RBX::Notifier<RBX::World, RBX::AutoJoin>, public RBX::Notifier<RBX::World, RBX::AutoDestroy> {
     private: 
         RBX::ContactManager* contactManager;
         RBX::JointStage* jointStage;
