@@ -2,6 +2,7 @@
 
 #include "util/IndexArray.h"
 
+#include "v8kernel/Point.h"
 #include "v8kernel/Body.h"
 
 namespace RBX {
