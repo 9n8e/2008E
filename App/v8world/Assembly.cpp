@@ -3,6 +3,7 @@
 #include "v8world/Assembly.h"
 #include "v8world/Clump.h"
 #include "v8world/Contact.h"
+#include "v8world/SimJobStage.h"
 
 #include "util/Vector3int32.h"
 #include "util/Extents.h"
@@ -254,10 +255,6 @@ namespace RBX {
         } while (this);
 
         return result;
-    }
-
-    RBX::SimJob getSimJob() {
-        return this->simJob;
     }
 
     RBX::Sim::AssemblyState getSleepStatus() {
