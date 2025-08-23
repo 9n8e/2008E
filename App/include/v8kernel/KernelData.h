@@ -3,15 +3,16 @@
 #include "util/IndexArray.h"
 
 #include "v8kernel/Point.h"
+#include "v8kernel/Connector.h"
 #include "v8kernel/Body.h"
 
 namespace RBX {
     class KernelData {
     public: 
         RBX::IndexArray<RBX::Body,&RBX::Body::getKernelIndex> bodies;
-        RBX::IndexArray<RBX::Point,{RBX::Point::getKernelIndex,0}> points;
-        RBX::IndexArray<RBX::Connector,{RBX::Connector::getKernelIndex,0}> connectors;
-        RBX::IndexArray<RBX::Connector,{RBX::Connector::getKernelIndex,0}> connectors2ndPass;
+        RBX::IndexArray<RBX::Point,&RBX::Point::getKernelIndex> points;
+        RBX::IndexArray<RBX::Connector,RBX::Connector::getKernelIndex> connectors;
+        RBX::IndexArray<RBX::Connector,RBX::Connector::getKernelIndex> connectors2ndPass;
 
         KernelData(const RBX::KernelData&);
         KernelData();

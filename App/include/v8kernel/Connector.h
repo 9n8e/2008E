@@ -4,10 +4,8 @@
 
 namespace RBX {
     class Connector : public KernelData {
-    private: 
-        int32_t& getKernelIndex();
-        
     public: 
+        int32_t& getKernelIndex();
         Connector(const RBX::Connector&);
         Connector();
         virtual ~Connector();

@@ -6,8 +6,6 @@ namespace RBX {
     class Point : public RBX::KernelData {
     private: 
         int numOwners;
-        int& getKernelIndex();
-
     protected: 
         RBX::Body* body;
         G3D::Vector3 localPos;
@@ -17,6 +15,7 @@ namespace RBX {
         virtual ~Point();
 
     public: 
+        int& getKernelIndex();
         Point(const RBX::Point&);
         void step();
         void accumulateForce(const G3D::Vector3&);

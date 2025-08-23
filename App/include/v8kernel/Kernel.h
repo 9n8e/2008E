@@ -1,4 +1,8 @@
-#include "v8world/IPipelined.h";
+#pragma once
+
+#include "v8world/IPipelined.h"
+
+#include "v8kernel/KernelData.h"
 
 namespace RBX {
     class Kernel : public IStage {
