@@ -18,13 +18,13 @@ namespace RBX {
         static bool ignoreBool;
         virtual void putInKernel(RBX::Kernel*);
         virtual void removeFromKernel();
-        virtual RBX::Edge::EdgeType getEdgeType() const;
+        
 
     protected: 
         RBX::Body* getBody(int32_t) const;
         RBX::ContactConnector* createConnector();
-        void deleteConnector(RBX::ContactConnector*&);
-        virtual void deleteAllConnectors();
+        
+        
         virtual bool stepContact();
         static int contactPairMatches;
         static int contactPairMisses;
@@ -33,6 +33,9 @@ namespace RBX {
         Contact(const RBX::Contact&);
         Contact(RBX::Primitive*, RBX::Primitive*);
         virtual ~Contact();
+        void deleteConnector(RBX::ContactConnector*&);
+        virtual void deleteAllConnectors();
+        virtual RBX::Edge::EdgeType getEdgeType() const;
         int& steppingIndexFunc();
         virtual bool computeIsColliding(float);
         bool computeIsAdjacent(float);

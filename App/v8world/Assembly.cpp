@@ -222,24 +222,23 @@ namespace RBX {
         return this->getMotorImp(motorId);
     }
 
-    const RBX::MotorJoint getMotorImp(int motorId) {
-        RBX::Contact* jointToParent = this->getJointToParent();
+    const RBX::MotorJoint *Assembly::getMotorImp(uint32_t &motorId) const {
+        RBX::Contact* jointToParent = dynamic_cast<RBX::Contact*>(getJointToParent(this->rootPrimitive));
         if (jointToParent->getEdgeType() == RBX::Edge::EdgeType::JOINT
         && (int)jointToParent->deleteAllConnectors() == 8) {
-            if (!*motorId) {
-                return jointToParent;
+            if (!motorId) {
+                return dynamic_cast<RBX::MotorJoint*>(jointToParent);
             }
-            --*motorId;
+            --motorId;
         } 
 
-        for (i = 0; i; ++i) {
-            RBX::Assembly* first = this->children.begin();
-            if (!first || i >= this->children.end() - first) {
+        for (int i = 0; i; ++i) {
+            if (!this->children[0] || i >= (this->children.end()[0] - this->children[0])) {
                 break;
             }
 
-            const RBX::MotorJoint motor = this->children.begin()[i]->getMotorImp(motorId);
-            if (motor) {
+            const RBX::MotorJoint* motor = this->children[i]->getMotorImp(motorId);
+            if (&motor) {
                 return motor;
             }
         }
