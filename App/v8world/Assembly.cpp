@@ -5,6 +5,7 @@
 #include "v8world/Contact.h"
 #include "v8world/SimJobStage.h"
 #include "v8world/SleepStage.h"
+#include "v8world/IMoving.h"
 
 #include "util/Vector3int32.h"
 #include "util/Extents.h"
@@ -279,9 +280,9 @@ namespace RBX {
         RBX::PrimIterator it = RBX::PrimIterator::begin(this->rootPrimitive, RBX::PrimIterator::SearchType::IN_ASSEMBLY);
 
         while (it != RBX::PrimIterator::end(RBX::PrimIterator::SearchType::IN_ASSEMBLY)) {
-            RBX::Primitive* prim =* it;
+            RBX::Primitive* prim = *it;
 
-            RBX::IMoving* movingInterface = static_cast<RBX::IMoving*>(prim->body);
+            RBX::IMoving* movingInterface = dynamic_cast<RBX::IMoving*>(prim->getBody());
             if (movingInterface) {
                 movingInterface->notifyMoved();
             }

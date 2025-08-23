@@ -146,6 +146,7 @@ namespace RBX {
         };
 
         PrimIterator(RBX::Primitive*, RBX::PrimIterator::SearchType);
+        virtual ~PrimIterator();
         RBX::Primitive* primitive; 
         RBX::PrimIterator::SearchType searchType;
         RBX::Primitive* operator*() const;

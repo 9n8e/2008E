@@ -75,7 +75,7 @@ namespace RBX {
     public:
         Body(const Body&);
         Body();
-        ~Body();
+        virtual ~Body();
 
         void step(float, bool);
         IndexArray<Body, Body::getIndex> getChildren();
