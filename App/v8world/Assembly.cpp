@@ -204,10 +204,11 @@ namespace RBX {
         
         while (true) {
             if (LOBYTE(jointOwner->steppingIndexFunc())) {
-                prim0 = jointOwner->getPrimitive(0); // yea i dont know wtf im doing here
-                if (p == prim0) {
-                    prim0 = jointOwner->getPrimitive(1); // previously 'result->prim1';
-                }
+                // TBD LATER
+                // prim0 = jointOwner->getPrimitive(0); // yea i dont know wtf im doing here
+                // if (p == prim0) {
+                //     prim0 = jointOwner->getPrimitive(1); // previously 'result->prim1';
+                // }
 
                 if (!prim0 || p->getBody()->getParent() == prim0->getBody()) {
                     break;

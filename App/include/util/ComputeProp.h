@@ -7,6 +7,7 @@ namespace RBX {
         B* object;
         F (B::* getFunc)();
     public: 
+        ComputeProp();
         ComputeProp<F,B>(B*, F (B::*)());
         bool getValue() const;
         bool operator bool() const;
