@@ -6,6 +6,7 @@
 #include "v8world/SimJobStage.h"
 #include "v8world/SleepStage.h"
 #include "v8world/IMoving.h"
+#include "v8world/IPipelined.h"
 
 #include "util/Vector3int32.h"
 #include "util/Extents.h"
@@ -221,14 +222,13 @@ namespace RBX {
         return *jointOwner;
     }
 
-    const RBX::MotorJoint *Assembly::getMotorConst(uint32_t motorId) const {
+    const RBX::MotorJoint *Assembly::getMotorConst(int motorId) const {
         return this->getMotorImp(motorId);
     }
 
-    const RBX::MotorJoint *Assembly::getMotorImp(uint32_t &motorId) const {
+    const RBX::MotorJoint *Assembly::getMotorImp(int &motorId) const {
         RBX::Contact* jointToParent = dynamic_cast<RBX::Contact*>(getJointToParent(this->rootPrimitive));
-        if (jointToParent->getEdgeType() == RBX::Edge::EdgeType::JOINT
-        && (int)jointToParent->deleteAllConnectors() == 8) {
+        if (jointToParent->getEdgeType() == RBX::Edge::EdgeType::JOINT) {
             if (!motorId) {
                 return dynamic_cast<RBX::MotorJoint*>(jointToParent);
             }
@@ -330,7 +330,7 @@ namespace RBX {
         return assembly2;
     }
 
-    void putInKernel(RBX::Kernel* kernel) {
+    void Assembly::putInKernel(RBX::Kernel* kernel) {
         this->putInStage(kernel); // inherited from IPipelined
         kernel->insertBody(this->rootPrimitive->body);
     }
