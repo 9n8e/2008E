@@ -7,6 +7,18 @@
 #include "util/Vector3int32.h"
 
 namespace RBX {
+    class SpatialNode {
+    public: 
+        RBX::Primitive* primitive;
+        RBX::SpatialNode* nextHashLink;
+        RBX::SpatialNode* nextPrimitiveLink;
+        RBX::SpatialNode* prevPrimitiveLink;
+        int hashId;
+        RBX::Vector3int32 gridId;
+
+        SpatialNode();
+    };
+
     class SpatialHash {
     private: 
         RBX::World* world;
