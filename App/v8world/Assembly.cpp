@@ -244,11 +244,13 @@ namespace RBX {
         }
     }
 
-    RBX::Assembly getRootAssembly() {
+    RBX::Assembly *Assembly::getRootAssembly() {
         RBX::Assembly* result = this;
         do {
             result = this;
-            this = this->parent
+            this->addChild(this->parent);
+            this->setParent(this->parent->parent);
+            this->parent->removeChild(this);
         } while (this);
 
         return result;
