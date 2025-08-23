@@ -319,9 +319,9 @@ namespace RBX {
         }
     }
 
-    RBX::Assembly = otherAssembly(RBX::Edge* edge) {
-        RBX::Assembly* assembly = edge->prim0->getAssembly();
-        RBX::Assembly* assembly2 = edge->prim1->getAssembly();
+    RBX::Assembly *Assembly::otherAssembly(RBX::Edge* edge) const {
+        RBX::Assembly* assembly = edge->getPrimitive(0)->getAssembly();
+        RBX::Assembly* assembly2 = edge->getPrimitive(1)->getAssembly();
 
         if (assembly != this) {
             return assembly;
