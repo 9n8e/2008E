@@ -291,11 +291,11 @@ namespace RBX {
         }
     }
 
-    int numMotors() {
+    int Assembly::numMotors() const {
         int count = 0;
-        RBX::Contact* jointToParent = this->rootPrimitive->getJointToParent();
+        RBX::Contact* jointToParent = dynamic_cast<RBX::Contact*>(getJointToParent(rootPrimitive));
 
-        if (jointToParent->getEdgeType = RBX::Edge::EdgeType::JOINT) {
+        if (jointToParent->getEdgeType() == RBX::Edge::EdgeType::JOINT) {
             count = 1;
         }
 
