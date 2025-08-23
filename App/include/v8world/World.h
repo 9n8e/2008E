@@ -10,6 +10,7 @@
 #include "v8world/ContactManager.h"
 #include "v8world/JointStage.h"
 #include "v8world/CollisionStage.h"
+#include "v8world/SimJobStage.h"
 
 namespace RBX {
     struct AutoDestroy {
