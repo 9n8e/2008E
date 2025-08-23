@@ -5,7 +5,7 @@
 #include "v8kernel/KernelData.h"
 
 namespace RBX {
-    class Kernel : public IStage {
+    class Kernel : public RBX::IStage {
     private: 
         bool inStepCode;
         RBX::KernelData* kernelData;

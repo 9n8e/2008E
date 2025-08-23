@@ -332,7 +332,7 @@ namespace RBX {
 
     void Assembly::putInKernel(RBX::Kernel* kernel) {
         this->putInStage(kernel); // inherited from IPipelined
-        kernel->insertBody(this->rootPrimitive->body);
+        kernel->insertBody(this->rootPrimitive->getBody());
     }
 
     void removeFromKernel() {
