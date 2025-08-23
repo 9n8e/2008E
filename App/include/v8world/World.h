@@ -11,6 +11,17 @@
 
 namespace RBX {
     template<class F, class B>
+    class Listener {
+    protected: 
+        virtual void onEvent(const F*, B);
+        RBX::Listener<F,B>& operator=(const RBX::Listener<F,B>&);
+        virtual ~Listener<F,B>();
+    public: 
+        Listener<F,B>(const RBX::Listener<F,B>&);
+        Listener<F,B>();
+    };
+
+    template<class F, class B>
     class Notifier {
     private: 
         std::vector<RBX::Listener<F, B> *,std::allocator<RBX::Listener<F, B> *> > listeners;
