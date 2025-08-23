@@ -1,3 +1,7 @@
+#pragma once
+
+#include "util/RunningAverage.h"
+
 namespace RBX {
     class SleepStage {};
     class SleepInfo {

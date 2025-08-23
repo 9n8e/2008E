@@ -4,6 +4,7 @@
 #include "v8world/Clump.h"
 #include "v8world/Contact.h"
 #include "v8world/SimJobStage.h"
+#include "v8world/SleepStage.h"
 
 #include "util/Vector3int32.h"
 #include "util/Extents.h"
@@ -257,16 +258,20 @@ namespace RBX {
         return result;
     }
 
-    RBX::Sim::AssemblyState getSleepStatus() {
-        RBX::Assembly i;
+    RBX::Sim::AssemblyState Assembly::getSleepStatus() const {
+        /*
+        // commenting this out bc WTF is the point of this?
+
+        RBX::Assembly* i;
 
         for (i = this->parent; i; i = i->parent) {
             this = i;
         }
+        */
 
         RBX::SleepInfo* sleepInfo = this->sleepInfo;
         if (sleepInfo) {
-            return sleepInfo->state;
+            return sleepInfo->getState();
         }
     }
 

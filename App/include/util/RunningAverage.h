@@ -1,5 +1,7 @@
 #pragma once
 
+#include "util/Quaternion.h"
+
 #include "G3D/CoordinateFrame.h"
 #include "G3D/Vector3.h"
 
