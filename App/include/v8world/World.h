@@ -2,6 +2,8 @@
 
 #include <set>
 
+#include "util/Profiling.h"
+
 #include "v8kernel/SimBody.h"
 
 #include "v8world/Primitive.h"
