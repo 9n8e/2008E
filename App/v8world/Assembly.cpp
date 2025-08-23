@@ -310,12 +310,12 @@ namespace RBX {
         this->canSleep.setDirty();
     }
 
-    void onPrimitivesChanged() {
-        this->maxRadius.dirty = true;
-        this->canSleep.dirty = true;
-        for (RBX::Assembly i = this->parent; i; i = i->parent) {
-            i->maxRadius.dirty = true;
-            i->canSleep.dirty = true;
+    void Assembly::onPrimitivesChanged() {
+        this->maxRadius.setDirty();
+        this->canSleep.setDirty();
+        for (RBX::Assembly* i = this->parent; i; i = i->parent) {
+            i->maxRadius.setDirty();
+            i->canSleep.setDirty();
         }
     }
 
