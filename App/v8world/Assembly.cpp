@@ -342,14 +342,14 @@ namespace RBX {
         this->removeFromKernel();
     }
 
-    void setParent(RBX::Assembly* newParent) {
+    void Assembly::setParent(RBX::Assembly* newParent) {
         RBX::Assembly* parent = this->parent;
         if (newParent != parent) {
             if (parent) {
                 newParent = this;
-                RBX::fastRemoveShort<RBX::Assembly* >(&parent->children, &newParent);
-                parent.maxRadius.dirty = true;
-                parent.canSleep.dirty = true;
+                RBX::fastRemoveShort(&parent->children, &newParent);
+                parent->maxRadius.setDirty();
+                parent->canSleep.setDirty();
                 if (parent->parent) {
                     parent->parent->onPrimitivesChanged();
                 }
@@ -360,8 +360,8 @@ namespace RBX {
                 newParent->addChild(this);
             }
 
-            this->maxRadius.dirty = true;
-            this->canSleep.dirty = true
+            this->maxRadius.setDirty();
+            this->canSleep.setDirty();
 
             if (this->parent) {
                 this->parent->onPrimitivesChanged();
