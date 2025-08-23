@@ -384,18 +384,18 @@ namespace RBX {
         }
     }
 
-    ~Assembly() {
+    Assembly::~Assembly() {
         RBX::PrimIterator it = RBX::PrimIterator::begin(this->rootPrimitive, RBX::PrimIterator::IN_ASSEMBLY);
         while (it != RBX::PrimIterator::end(RBX::PrimIterator::IN_ASSEMBLY)) {
             RBX::Primitive* prim =* it;
             prim->setClump(NULL);
-            prim->clumpDepth = -1;
+            prim->setClumpDepth(-1);
             ++it;
         }
 
         if (this->parent) {
-            RBX::fastRemoveShort<RBX::Assembly*>(
-                this->parent->children,
+            RBX::fastRemoveShort(
+                &this->parent->children,
                 this
             );
         }
@@ -410,7 +410,6 @@ namespace RBX {
             delete(this->children.data());
         }
 
-        this->children.begin() = NULL;
-        this->children.end() = NULL;
+        this->children.clear();
     }
 }
