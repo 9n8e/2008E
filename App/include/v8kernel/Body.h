@@ -35,7 +35,6 @@ namespace RBX {
         PV pv;
         float mass;
 
-        int& getKernelIndex();
         int& getIndex() {
             return this->index;
         };
@@ -77,6 +76,7 @@ namespace RBX {
         Body();
         virtual ~Body();
 
+        int& getKernelIndex();
         void step(float, bool);
         IndexArray<Body, Body::getIndex> getChildren();
         bool cofmIsClean();

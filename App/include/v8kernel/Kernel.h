@@ -11,7 +11,8 @@ namespace RBX {
         int maxConnectors;
         static int numKernels;
 
-    public: boost::scoped_ptr<RBX::Profiling::CodeProfiler> profilingKernel;
+    public: 
+        // TBD // boost::scoped_ptr<RBX::Profiling::CodeProfiler> profilingKernel;
         Kernel(const RBX::Kernel&);
         Kernel(RBX::IStage*);
         virtual ~Kernel();
