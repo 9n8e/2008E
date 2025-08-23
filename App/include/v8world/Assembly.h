@@ -39,7 +39,7 @@ namespace RBX {
         void onPrimitiveAdded(RBX::Primitive*);
         const RBX::Body* getRootBody() const;
         RBX::Body* getRootBody();
-        const RBX::MotorJoint* getMotorImp(uint32_t&) const;
+        const RBX::MotorJoint* getMotorImp(int&) const;
         static RBX::Joint* getJointToParent(RBX::Primitive*);
     public:
         Assembly(const RBX::Assembly&);
@@ -74,9 +74,9 @@ namespace RBX {
         RBX::EdgeIterator externalEdgeBegin() const;
         RBX::EdgeIterator externalEdgeEnd() const;
         RBX::Assembly* otherAssembly(RBX::Edge*) const;
-        uint32_t numMotors() const;
-        RBX::MotorJoint* getMotor(uint32_t);
-        const RBX::MotorJoint* getMotorConst(uint32_t) const;
+        int numMotors() const;
+        RBX::MotorJoint* getMotor(int);
+        const RBX::MotorJoint* getMotorConst(int) const;
         RBX::Assembly& operator=(const RBX::Assembly&);
 
 
