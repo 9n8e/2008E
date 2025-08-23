@@ -7,6 +7,7 @@
 #include "v8world/Primitive.h"
 #include "v8world/Clump.h"
 #include "v8world/SleepStage.h"
+#include "v8world/ContactManager.h"
 
 
 namespace RBX {
@@ -79,9 +80,10 @@ namespace RBX {
         int numContacts;
         int numLinkCalls;
         G3D::Array<RBX::Primitive *> tempPrimitives;
-        boost::scoped_ptr<RBX::Profiling::CodeProfiler> profilingWorldStep;
-        boost::scoped_ptr<RBX::Profiling::CodeProfiler> profilingUiStep;
-        boost::scoped_ptr<RBX::Profiling::CodeProfiler> profilingBroadphase;
+        // TBD
+        // boost::scoped_ptr<RBX::Profiling::CodeProfiler> profilingWorldStep;
+        // boost::scoped_ptr<RBX::Profiling::CodeProfiler> profilingUiStep;
+        // boost::scoped_ptr<RBX::Profiling::CodeProfiler> profilingBroadphase;
         void destroyJoints(RBX::Primitive*, std::set<RBX::Primitive *,std::less<RBX::Primitive *>,std::allocator<RBX::Primitive *> >*);
         void destroyJoint(RBX::Joint*);
         void removeFromBreakable(RBX::Joint*);

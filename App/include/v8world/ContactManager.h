@@ -6,6 +6,7 @@
 #include "v8world/SpatialHash.h"
 
 #include "util/Extents.h"
+#include "util/HitTestFilter.h"
 
 namespace RBX {
     class ContactManager {
