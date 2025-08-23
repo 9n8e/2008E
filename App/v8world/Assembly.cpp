@@ -335,11 +335,11 @@ namespace RBX {
         kernel->insertBody(this->rootPrimitive->getBody());
     }
 
-    void removeFromKernel() {
-        RBX::Body* body = this->rootPrimitive->body;
-        RBX::Kernel* kernel = this->getKernel() // inherited from IPipelined
+    void Assembly::removeFromKernel() {
+        RBX::Body* body = this->rootPrimitive->getBody();
+        RBX::Kernel* kernel = this->getKernel(); // inherited from IPipelined
         kernel->removeBody(body);
-        RBX::IPipelined::removeFromKernel(this);
+        this->removeFromKernel();
     }
 
     void setParent(RBX::Assembly* newParent) {
