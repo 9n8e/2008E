@@ -1,0 +1,104 @@
+#pragma once
+
+#include <set>
+
+#include "v8kernel/SimBody.h"
+
+#include "v8world/Primitive.h"
+#include "v8world/Clump.h"
+#include "v8world/SleepStage.h"
+
+
+namespace RBX {
+    class World : public RBX::Notifier<RBX::World, RBX::AutoJoin> : public RBX::Notifier<RBX::World, RBX::AutoDestroy> {
+    private: 
+        RBX::ContactManager* contactManager;
+        RBX::JointStage* jointStage;
+        G3D::Array<RBX::Primitive *> touch;
+        G3D::Array<RBX::Primitive *> touchOther;
+        bool canThrottle;
+        bool inStepCode;
+        bool inJointNotification;
+        int worldStepId;
+        RBX::IndexArray<RBX::Primitive,&RBX::Primitive::worldIndexFunc> primitives;
+        std::set<RBX::Joint *,std::less<RBX::Joint *>,std::allocator<RBX::Joint *> > breakableJoints;
+        int numJoints;
+        int numContacts;
+        int numLinkCalls;
+        G3D::Array<RBX::Primitive *> tempPrimitives;
+        boost::scoped_ptr<RBX::Profiling::CodeProfiler> profilingWorldStep;
+        boost::scoped_ptr<RBX::Profiling::CodeProfiler> profilingUiStep;
+        boost::scoped_ptr<RBX::Profiling::CodeProfiler> profilingBroadphase;
+        void destroyJoints(RBX::Primitive*, std::set<RBX::Primitive *,std::less<RBX::Primitive *>,std::allocator<RBX::Primitive *> >*);
+        void destroyJoint(RBX::Joint*);
+        void removeFromBreakable(RBX::Joint*);
+        void doBreakJoints();
+        void createJoints(RBX::Primitive*, std::set<RBX::Primitive *,std::less<RBX::Primitive *>,std::allocator<RBX::Primitive *> >*);
+
+    public:
+        static bool disableEnvironmentalThrottle;
+        void createJoints(RBX::Primitive*);
+        void destroyJoints(RBX::Primitive*);
+        World(const RBX::World&);
+        World();
+        virtual ~World();
+        void assertNotInStep();
+        void assertInStep();
+        void addedBodyForce();
+        void setCanThrottle(bool);
+        RBX::ContactManager& getContactManager();
+        RBX::ClumpStage* getClumpStage();
+        const RBX::CollisionStage* getCollisionStage() const;
+        RBX::CollisionStage* getCollisionStage();
+        const RBX::SleepStage* getSleepStage() const;
+        RBX::SleepStage* getSleepStage();
+        RBX::SimJobStage& getSimJobStage();
+        const RBX::Kernel& getKernel() const;
+        RBX::Kernel& getKernel();
+        const G3D::Array<RBX::Primitive *>& getTouch() const;
+        const G3D::Array<RBX::Primitive *>& getTouchOther() const;
+        void computeFallen(G3D::Array<RBX::Primitive *>&) const;
+        const G3D::Array<RBX::Primitive *>& getPrimitives() const;
+        float step(float);
+        void update();
+        void reset();
+        int getWorldStepId();
+        void insertPrimitive(RBX::Primitive*);
+        void removePrimitive(RBX::Primitive*);
+        void ticklePrimitive(RBX::Primitive*, bool);
+        void joinAll();
+        void createJointsToWorld(const G3D::Array<RBX::Primitive *>&);
+        void destroyJointsToWorld(const G3D::Array<RBX::Primitive *>&);
+        void insertJoint(RBX::Joint*);
+        void removeJoint(RBX::Joint*);
+        int getMetric(RBX::IWorldStage::MetricType) const;
+        int getNumBodies() const;
+        int getNumPoints() const;
+        int getNumConstraints() const;
+        int getNumHashNodes() const;
+        int getMaxBucketSize() const;
+        int getNumLinkCalls() const;
+        int getNumContacts() const;
+        int getNumJoints() const;
+        int getNumPrimitives() const;
+        const RBX::Profiling::CodeProfiler& getProfileWorldStep() const;
+        RBX::Profiling::CodeProfiler& getProfileWorldStep();
+        const RBX::Profiling::CodeProfiler& getProfileBroadphase() const;
+        const RBX::Profiling::CodeProfiler& getProfileUiStep() const;
+        void onPrimitiveAddedAnchor(RBX::Primitive*);
+        void onPrimitiveRemovedAnchor(RBX::Primitive*);
+        void onPrimitiveExtentsChanged(RBX::Primitive*);
+        void onAssemblyExtentsChanged(RBX::Assembly*);
+        void onPrimitiveContactParametersChanged(RBX::Primitive*);
+        void onPrimitiveCanCollideChanged(RBX::Primitive*);
+        void onPrimitiveCanSleepChanged(RBX::Primitive*);
+        void onPrimitiveGeometryTypeChanged(RBX::Primitive*);
+        void onPrimitiveTouched(RBX::Primitive*, RBX::Primitive*);
+        void onMotorAngleChanged(RBX::MotorJoint*);
+        void onJointPrimitiveNulling(RBX::Joint*, RBX::Primitive*);
+        void onJointPrimitiveSet(RBX::Joint*, RBX::Primitive*);
+        void insertContact(RBX::Contact*);
+        void destroyContact(RBX::Contact*);
+        RBX::World& operator=(const RBX::World&);
+    };
+}
