@@ -306,8 +306,8 @@ namespace RBX {
         return count;
     }
 
-    void onPrimitivesCanSleepChanged(RBX::Primitive* p) {
-        this->canSleep.dirty = true;
+    void Assembly::onPrimitiveCanSleepChanged(RBX::Primitive* p) {
+        this->canSleep.setDirty();
     }
 
     void onPrimitivesChanged() {
