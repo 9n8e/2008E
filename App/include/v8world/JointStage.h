@@ -8,6 +8,7 @@
 #include "v8world/World.h"
 #include "v8world/Edge.h"
 #include "v8world/IWorldStage.h"
+#include "v8world/ClumpStage.h"
 
 namespace RBX {
     class JointStage : public RBX::IWorldStage {

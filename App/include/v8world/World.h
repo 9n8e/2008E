@@ -8,7 +8,7 @@
 #include "v8world/Clump.h"
 #include "v8world/SleepStage.h"
 #include "v8world/ContactManager.h"
-
+#include "v8world/JointStage.h"
 
 namespace RBX {
     struct AutoDestroy {
