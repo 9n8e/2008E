@@ -281,8 +281,8 @@ namespace RBX {
 
         while (it != RBX::PrimIterator::end(RBX::PrimIterator::SearchType::IN_ASSEMBLY)) {
             RBX::Primitive* prim = *it;
-
             RBX::IMoving* movingInterface = dynamic_cast<RBX::IMoving*>(prim->getBody());
+
             if (movingInterface) {
                 movingInterface->notifyMoved();
             }
