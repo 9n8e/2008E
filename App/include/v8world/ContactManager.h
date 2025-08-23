@@ -3,6 +3,7 @@
 #include "v8world/World.h"
 #include "v8world/Primitive.h"
 #include "v8world/Contact.h"
+#include "v8world/SpatialHash.h"
 
 #include "util/Extents.h"
 
