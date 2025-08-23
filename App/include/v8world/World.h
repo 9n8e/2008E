@@ -10,6 +10,16 @@
 
 
 namespace RBX {
+    struct AutoDestroy {
+        RBX::Joint* joint;
+        AutoDestroy(RBX::Joint*);
+    };
+
+    struct AutoJoin {
+        RBX::Joint* joint;
+        AutoJoin(RBX::Joint*);
+    };
+
     struct RaiseRange {
     public: 
         int index;
