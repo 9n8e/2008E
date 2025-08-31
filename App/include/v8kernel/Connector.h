@@ -5,7 +5,7 @@
 namespace RBX {
     class Connector : public RBX::KernelData {
     public: 
-        int32_t& getKernelIndex();
+        int getKernelIndex();
         Connector(const RBX::Connector&);
         Connector();
         virtual ~Connector();
