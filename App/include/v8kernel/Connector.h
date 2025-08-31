@@ -3,7 +3,7 @@
 #include "v8kernel/KernelData.h"
 
 namespace RBX {
-    class Connector : public KernelData {
+    class Connector : public RBX::KernelData {
     public: 
         int32_t& getKernelIndex();
         Connector(const RBX::Connector&);
