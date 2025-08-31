@@ -1,9 +1,9 @@
 #pragma once
 
-#include "v8kernel/KernelData.h"
+#include "v8kernel/KernelIndex.h"
 
 namespace RBX {
-    class Point : public RBX::KernelData {
+    class Point : public RBX::KernelIndex {
     private: 
         int numOwners;
     protected: 

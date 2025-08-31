@@ -3,9 +3,9 @@
 #include "v8kernel/KernelData.h"
 
 namespace RBX {
-    class Connector : public RBX::KernelData {
+    class Connector : public RBX::KernelIndex {
     public: 
-        int getKernelIndex();
+        int& getKernelIndex();
         Connector(const RBX::Connector&);
         Connector();
         virtual ~Connector();
