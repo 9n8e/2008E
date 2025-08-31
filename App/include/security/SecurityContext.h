@@ -21,9 +21,9 @@ namespace RBX {
             Context(Identities);
             // tbd // static boost::thread_specific_ptr<Context>& ptr();
         public:
-            void requirePermisson(Permissions, const char*) const;
+            void requirePermission(Permissions, const char*) const;
             bool hasPermission(Permissions);
-            
+
             static Context& current();
             static bool isInRole(Identities, Permissions);
         };
