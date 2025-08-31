@@ -8,6 +8,30 @@ namespace RBX {
     }
 
     Connector::Connector() {
+
+    }
+
+    Connector::~Connector() {
+
+    }
+
+    void Connector::computeForce(const float, bool) {
+
+    }
+
+    bool Connector::canThrottle() const {
+
+    }
+
+    bool Connector::getBroken() {
+
+    }
+
+    float Connector::potentialEnergy() {
+
+    }
+
+    RBX::Connector& Connector::operator=(const RBX::Connector&) {
         
     }
 }
