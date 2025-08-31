@@ -4,7 +4,7 @@
 
 namespace RBX {
     int& Connector::getKernelIndex() {
-        return this->kernelIndex;
+        return kernelIndex;
     }
 
     Connector::Connector() {
@@ -32,6 +32,6 @@ namespace RBX {
     }
 
     RBX::Connector& Connector::operator=(const RBX::Connector&) {
-        
+
     }
 }
