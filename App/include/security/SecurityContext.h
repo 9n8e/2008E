@@ -1,3 +1,10 @@
+#pragma once
+
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <format>
+
 namespace RBX {
     namespace Security {
         enum Permissions {
@@ -16,16 +23,20 @@ namespace RBX {
         };
 
         class Context {
-        private:
-            const Identities identity;
-            Context(Identities);
-            // tbd // static boost::thread_specific_ptr<Context>& ptr();
-        public:
-            void requirePermission(Permissions, const char*) const;
-            bool hasPermission(Permissions);
+            private:
+                const Identities identity;
+                Context(Identities);
 
-            static Context& current();
-            static bool isInRole(Identities, Permissions);
-        };
-    }
-}
+                // static boost::thread_specific_ptr<Context>& ptr();
+            public:
+                void requirePermission(Permissions, const char*) const;
+                bool hasPermission(Permissions);
+
+                static Context& current();
+                static bool isInRole(Identities, Permissions);
+            };
+    };
+};
+
+
+
