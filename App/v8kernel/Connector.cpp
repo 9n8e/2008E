@@ -4,6 +4,10 @@
 
 namespace RBX {
     int& Connector::getKernelIndex() {
+        return this->kernelIndex;
+    }
 
+    Connector::Connector() {
+        
     }
 }
