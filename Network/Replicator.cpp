@@ -5,7 +5,7 @@ namespace RBX {
             //blablabla
             std::string playerIp = SystemAddress::ToString(&remotePlayerId, true);
             RBX::Instance::setName(this, &playerIp);
-            // blablalba
+            // test
         }
     }
 }
