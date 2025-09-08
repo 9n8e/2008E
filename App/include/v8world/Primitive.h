@@ -1,0 +1,161 @@
+namespace RBX {
+    class Primitive {
+    private:
+        RBX::Guid guid;
+        bool guidSetExternally;
+        uint32_t sizeMultiplier;
+        RBX::EdgeList joints;
+        int32_t worldIndex;
+        RBX::World* world;
+        RBX::Clump* clump;
+        int32_t clumpDepth;
+        int32_t traverseId;
+        RBX::SpatialNode* spatialNodes;
+        RBX::Vector3int32 oldSpatialMin;
+        RBX::Vector3int32 oldSpatialMax;
+        RBX::Extents fuzzyExtents;
+        int32_t fuzzyExtentsStateId;
+        static bool ignoreBool;
+        void onChangedInKernel();
+        G3D::Vector3 clipToSafeSize(const G3D::Vector3&);
+        RBX::Extents computeFuzzyExtents() const;
+        RBX::RigidJoint* getFirstRigidAt(RBX::Edge*);
+        static const int32_t fuzzyExtentsReset();
+        
+    protected: 
+        RBX::Geometry* geometry;
+        RBX::Body* body;
+        RBX::IMoving* myOwner;
+        RBX::Anchor* anchorObject;
+        bool dragging;
+        bool anchored;
+        bool canCollide;
+        bool canSleep;
+        float friction;
+        float elasticity;
+        RBX::SurfaceType surfaceType[6];
+        RBX::SurfaceData* surfaceData[6];
+        RBX::Controller* controller;
+        RBX::ComputeProp<float,RBX::Primitive> JointK;
+        float computeJointK() const;
+        static RBX::Geometry* newGeometry(RBX::Geometry::GeometryType);
+
+    public: 
+        static bool disableSleep;
+        int32_t& worldIndexFunc();
+        void Primitive(const RBX::Primitive&);
+        void Primitive(RBX::Geometry::GeometryType);
+        virtual ~Primitive();
+        const RBX::Guid& getGuid() const;
+        void setGuid(const RBX::Guid&);
+        uint32_t getSizeMultiplier() const;
+        void setSizeMultiplier(uint32_t);
+        RBX::World* getWorld() const;
+        void setWorld(RBX::World*);
+        RBX::Clump* getClump() const;
+        void setClump(RBX::Clump*);
+        int32_t getClumpDepth() const;
+        void setClumpDepth(int32_t);
+        int32_t getTraverseId() const;
+        void setTraverseId(int32_t);
+        RBX::Assembly* getAssembly() const;
+        const RBX::Geometry* getGeometry() const;
+        RBX::Geometry* getGeometry();
+        void setPrimitiveType(RBX::Geometry::GeometryType);
+        RBX::Geometry::GeometryType getPrimitiveType() const;
+        const RBX::Body* getBody() const;
+        RBX::Body* getBody();
+        void setOwner(RBX::IMoving*);
+        RBX::IMoving* getOwner() const;
+        const G3D::CoordinateFrame& getCoordinateFrame() const;
+        G3D::CoordinateFrame getGridCorner() const;
+        void setCoordinateFrame(const G3D::CoordinateFrame&);
+        void setGridCorner(const G3D::CoordinateFrame&);
+        void setPV(const RBX::PV&);
+        void setVelocity(const RBX::Velocity&);
+        void setMassInertia(float);
+        void setDragging(bool);
+        bool getDragging() const;
+        void setAnchor(bool);
+        bool getAnchor() const;
+        RBX::Anchor* getAnchorObject();
+        void setCanCollide(bool);
+        const bool getCanCollide() const;
+        void setCanSleep(bool);
+        const bool getCanSleep() const;
+        void setFriction(float);
+        float getFriction() const;
+        void setElasticity(float);
+        float getElasticity() const;
+        void setGridSize(const G3D::Vector3&);
+        const G3D::Vector3& getGridSize() const;
+        virtual float getRadius() const;
+        float getPlanarSize() const;
+        RBX::Extents getExtentsLocal() const;
+        RBX::Extents getExtentsWorld() const;
+        const RBX::Extents& getFastFuzzyExtents() const;
+        bool hitTest(const G3D::Ray&, G3D::Vector3&, bool&);
+        RBX::Face getFaceInObject(RBX::NormalId);
+        RBX::Face getFaceInWorld(RBX::NormalId);
+        G3D::CoordinateFrame getFaceCoordInObject(RBX::NormalId);
+        void setSurfaceType(RBX::NormalId, RBX::SurfaceType);
+        RBX::SurfaceType getSurfaceType(RBX::NormalId) const;
+        void setSurfaceData(RBX::NormalId, const RBX::SurfaceData&);
+        const RBX::SurfaceData& getSurfaceData(RBX::NormalId) const;
+        void setController(RBX::Controller*);
+        RBX::Controller* getController();
+        float getJointK() const;
+        int32_t getNumJoints2() const;
+        int32_t countNumJoints() const;
+        int32_t getNumContacts() const;
+        int32_t getNumEdges() const;
+        bool hasEdge();
+        RBX::Edge* getFirstEdge() const;
+        RBX::Edge* getNextEdge(RBX::Edge*) const;
+        RBX::Joint* getFirstJoint() const;
+        RBX::Joint* getNextJoint(RBX::Joint*) const;
+        RBX::Contact* getFirstContact();
+        RBX::Contact* getNextContact(RBX::Contact*);
+        RBX::RigidJoint* getFirstRigid();
+        RBX::RigidJoint* getNextRigid(RBX::RigidJoint*);
+        RBX::Primitive& operator=(const RBX::Primitive&);
+        void __dflt_ctor_closure();
+        void __local_vftable_ctor_closure();
+        virtual void* __vecDelDtor(uint32_t);
+        static void onNewTouch(RBX::Primitive*, RBX::Primitive*);
+        static float squaredDistance(const RBX::Primitive&, const RBX::Primitive&);
+        static bool aaBoxCollide(const RBX::Primitive&, const RBX::Primitive&);
+        static float defaultElasticity();
+        static float defaultFriction();
+        static void insertEdge(RBX::Edge*);
+        static void removeEdge(RBX::Edge*);
+        static RBX::Joint* getJoint(RBX::Primitive*, RBX::Primitive*);
+        static RBX::Contact* getContact(RBX::Primitive*, RBX::Primitive*);
+        static RBX::Primitive* downstreamPrimitive(RBX::Joint*);
+    };
+    class PrimIterator {
+    private:
+        static bool isParent(RBX::Primitive*, RBX::Primitive*, RBX::Joint*, RBX::PrimIterator::SearchType);
+        static RBX::Primitive* findFirstChild(RBX::Primitive*, RBX::PrimIterator::SearchType);
+        static RBX::Primitive* findNextSibling(RBX::Primitive*, RBX::Primitive*, RBX::PrimIterator::SearchType);
+        static RBX::Primitive* findNextRelative(RBX::Primitive*, RBX::Primitive*, RBX::PrimIterator::SearchType);
+    public:
+        enum SearchType {
+            IN_CLUMP = 0x0000,
+            IN_ASSEMBLY = 0x0001,
+        };
+
+        PrimIterator(RBX::Primitive*, RBX::PrimIterator::SearchType);
+        virtual ~PrimIterator();
+        RBX::Primitive* primitive; 
+        RBX::PrimIterator::SearchType searchType;
+        RBX::Primitive* operator*() const;
+        bool operator==(const RBX::PrimIterator&) const;
+        bool operator!=(const RBX::PrimIterator&) const;
+        RBX::PrimIterator& operator++();
+        static RBX::PrimIterator begin(RBX::Primitive*, RBX::PrimIterator::SearchType);
+        static RBX::PrimIterator end(RBX::PrimIterator::SearchType);
+        static RBX::Primitive* getNextPrimitive(RBX::Primitive*, RBX::PrimIterator::SearchType);
+        static RBX::Primitive* findParent(RBX::Primitive*, RBX::PrimIterator::SearchType);
+    };
+}

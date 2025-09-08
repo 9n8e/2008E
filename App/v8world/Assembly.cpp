@@ -1,0 +1,416 @@
+#pragma once
+
+#include "v8world/Assembly.h"
+#include "v8world/Clump.h"
+#include "v8world/Contact.h"
+#include "v8world/SimJobStage.h"
+#include "v8world/SleepStage.h"
+#include "v8world/IMoving.h"
+#include "v8world/IPipelined.h"
+
+#include "util/Vector3int32.h"
+#include "util/Extents.h"
+#include "util/Debug.h"
+
+namespace RBX {
+    // note: list initializer - did not exist in c98, added in c11
+    Assembly::Assembly(RBX::Primitive* root) {
+        // this->currentStage = NULL;
+        // this->sleepInfo = NULL;
+        this->rootPrimitive = root;
+        // this->parent = NULL;
+        // this->children._Myfirst = 0;
+        // this->children._Mylast = 0;
+        // this->children._Myend = 0;
+        // this->simJob = 0;
+        // this->maxRadius.getFunc = &computeMaxRadius();
+        // this->maxRadius.setDirty();
+        // this->maxRadius.object = this;
+        //* ((_DWORD* )&this->maxRadius.getFunc + 1) = 0; - signals that .getFunc takes a reference to a function
+        // this->canSleep.setDirty();
+        // this->canSleep.object = this;
+        // this->canSleep.getFunc = &computeCanSleep();
+        //* ((_DWORD* )&this->canSleep.getFunc + 1) = 0;
+        // root->setClump(this);
+    }
+
+    void Assembly::addChild(RBX::Assembly* child) {
+        std::vector<RBX::Assembly *, std::allocator<RBX::Assembly *>> p_children = this->children;
+
+        RBXASSERT(p_children.begin() > p_children.end());
+
+        this->children.push_back(child);
+        /* TBD
+        std::sort(
+            p_children.begin(),
+            p_children.end(),
+            p_children.begin() - p_children.end(),
+            RBX::lessAssembly
+        ); */
+    }
+
+    void Assembly::addGroundChild(RBX::Primitive* p) {
+        RBX::Body* body = p->getBody();
+        RBX::Clump* clump = p->getClump();
+        body->setParent(NULL);
+
+        RBX::Assembly* parent = clump->parent;
+        if (parent) {
+            p = dynamic_cast<RBX::Primitive*>(clump);
+            //RBX::fastRemoveShort<RBX::Assembly* >(&parent->children, &p);
+            RBX::fastRemoveShort(&parent->children, &p);
+
+            parent->maxRadius.setDirty();
+            parent->canSleep.setDirty();
+            if (parent->parent) {
+                parent->parent->onPrimitivesChanged();
+            }
+
+            clump->parent = NULL;
+            clump->maxRadius.setDirty();
+            clump->canSleep.setDirty();
+            if (clump->parent) {
+                clump->parent->onPrimitivesChanged();
+            }
+        }
+    }
+
+    void Assembly::addMotorChild(RBX::Primitive* parent, RBX::MotorJoint* m, RBX::Primitive* child) {
+        RBX::Clump* clump = parent->getClump();
+        child->setClumpDepth(parent->getClumpDepth() + 1); 
+        child->getClump()->setParent(clump);
+
+        child->getBody()->setParent(parent->getBody());
+        RBX::Body* body = child->getBody();
+
+        RBX::RevoluteLink* rLink = m->resetLink();
+        body->setMeInParent(rLink);
+    }
+
+    void Assembly::addRigidChild(RBX::Primitive* parent, RBX::RigidJoint* r, RBX::Primitive* child) {
+        RBX::Clump* clump = parent->getClump();
+        child->setClump(clump);
+        child->setClumpDepth(parent->getClumpDepth() + 1); ;
+        child->getBody()->setParent(parent->getBody());
+        RBX::Body* body = child->getBody();
+
+        G3D::CoordinateFrame* result;
+        G3D::CoordinateFrame ChildInParent = r->getChildInParent(parent, child);
+        body->setMeInParent(ChildInParent);
+
+        clump->maxRadius.setDirty();
+        clump->canSleep.setDirty();
+        if (clump->parent) {
+            clump->parent->onPrimitivesChanged();
+        }
+    }
+
+    RBX::PrimIterator Assembly::assemblyPrimBegin() const {
+        RBX::PrimIterator prim = RBX::PrimIterator(this->rootPrimitive, RBX::PrimIterator::SearchType::IN_ASSEMBLY);
+        return prim;
+    }
+
+    RBX::PrimIterator Assembly::assemblyPrimEnd() const {
+        RBX::PrimIterator prim = RBX::PrimIterator(NULL, RBX::PrimIterator::SearchType::IN_ASSEMBLY);
+        return prim;
+    }
+
+    bool Assembly::computeCanSleep() const {
+        RBX::PrimIterator it = RBX::PrimIterator::begin(this->rootPrimitive, RBX::PrimIterator::IN_ASSEMBLY);
+
+        while (it != RBX::PrimIterator::end(RBX::PrimIterator::IN_ASSEMBLY)) {
+            ++it;
+            if (it.searchType == RBX::PrimIterator::SearchType::IN_CLUMP) {
+                return true;
+            }
+        }
+    }
+
+    float Assembly::computeMaxRadius() const {
+        float offset = 0.0;
+        RBX::PrimIterator it = RBX::PrimIterator::begin(this->rootPrimitive, RBX::PrimIterator::IN_ASSEMBLY);
+        RBX::PrimIterator end = RBX::PrimIterator::end(RBX::PrimIterator::IN_ASSEMBLY);
+        G3D::Vector3 centerOfMass = this->rootPrimitive->getBody()->getBranchCofmPos();
+
+        for (it; it != end; ++it) {
+            RBX::Primitive* primitive =* it;
+
+            RBX::Body* body = primitive->getBody();
+            // body->updatePV();
+
+            const G3D::Vector3& pos = body->getPV().position.translation;
+            G3D::Vector3 offsetCenter(
+                pos.x - centerOfMass.x,
+                pos.y - centerOfMass.y,
+                pos.z - centerOfMass.z
+            );
+
+            G3D::Vector3 absOffset = RBX::Math::vector3Abs(offsetCenter);
+            
+
+            const RBX::Extents& extents = primitive->getExtentsWorld();
+            const G3D::Vector3 size = extents.size();
+
+            float hx = size.x*  0.5;
+            float hy = size.y*  0.5;
+            float hz = size.z*  0.5;
+
+            float dx = absOffset.x + hx;
+            float dy = absOffset.y + hy;
+            float dz = absOffset.z + hz;
+
+            float radius = std::sqrt(dx*  dx + dy*  dy + dz*  dz);
+
+            if (radius > offset) {
+                offset = radius;
+            }
+        }
+
+        return offset;
+    }
+
+    RBX::EdgeIterator Assembly::externalEdgeBegin() const {
+        // tbd here
+        // RBX::EdgeIterator edge = RBX::EdgeIterator(this->rootPrimitive, RBX::Edge(NULL, NULL));
+        // edge.begin(this->rootPrimitive);
+        // return edge;
+    }
+
+    RBX::EdgeIterator externalEdgeEnd(RBX::EdgeIterator* result) {
+        // tbd here
+        // result->primitive = result->end();
+        // result->edge = new RBX::Edge;
+        // return result;
+    }
+
+    bool Assembly::getAnchored() const {
+        return this->getAnchored() != false;
+    }
+
+    const RBX::Primitive *Assembly::getAssemblyPrimitiveConst() const {
+        if (this->parent) {
+            return this->parent->getRootAssembly()->rootPrimitive;
+        }
+
+        return this->rootPrimitive;
+    }
+
+    RBX::Contact getJointToParent(RBX::Primitive *p) {
+        RBX::Primitive *prim0;
+        //RBX::Contact *jointOwner = p->getJoint(p, prim0)->getJointOwner();
+        RBX::Contact* jointOwner = dynamic_cast<RBX::Contact*>(p->getJoint(p, prim0)->getJointOwner());
+
+        RBXASSERT(!&jointOwner);
+        
+        while (true) {
+            if (LOBYTE(jointOwner->steppingIndexFunc())) {
+                // TBD LATER
+                // prim0 = jointOwner->getPrimitive(0); // yea i dont know wtf im doing here
+                // if (p == prim0) {
+                //     prim0 = jointOwner->getPrimitive(1); // previously 'result->prim1';
+                // }
+
+                if (!prim0 || p->getBody()->getParent() == prim0->getBody()) {
+                    break;
+                }
+            }
+
+            jointOwner = p->getNextContact(jointOwner);
+
+            RBXASSERT(!jointOwner);
+        }
+
+        return *jointOwner;
+    }
+
+    const RBX::MotorJoint *Assembly::getMotorConst(int motorId) const {
+        return this->getMotorImp(motorId);
+    }
+
+    const RBX::MotorJoint *Assembly::getMotorImp(int &motorId) const {
+        RBX::Contact* jointToParent = dynamic_cast<RBX::Contact*>(getJointToParent(this->rootPrimitive));
+        if (jointToParent->getEdgeType() == RBX::Edge::EdgeType::JOINT) {
+            if (!motorId) {
+                return dynamic_cast<RBX::MotorJoint*>(jointToParent);
+            }
+            --motorId;
+        } 
+
+        for (int i = 0; i; ++i) {
+            if (!this->children[0] || i >= (this->children.end()[0] - this->children[0])) {
+                break;
+            }
+
+            const RBX::MotorJoint* motor = this->children[i]->getMotorImp(motorId);
+            if (&motor) {
+                return motor;
+            }
+        }
+    }
+
+    RBX::Assembly *Assembly::getRootAssembly() {
+        RBX::Assembly* result = this;
+        do {
+            result = this;
+            this->addChild(this->parent);
+            this->setParent(this->parent->parent);
+            this->parent->removeChild(this);
+        } while (this);
+
+        return result;
+    }
+
+    RBX::Sim::AssemblyState Assembly::getSleepStatus() const {
+        /*
+        // commenting this out bc WTF is the point of this?
+
+        RBX::Assembly* i;
+
+        for (i = this->parent; i; i = i->parent) {
+            this = i;
+        }
+        */
+
+        RBX::SleepInfo* sleepInfo = this->sleepInfo;
+        if (sleepInfo) {
+            return sleepInfo->getState();
+        }
+    }
+
+    void RBX::Assembly::notifyMoved() {
+        RBX::PrimIterator it = RBX::PrimIterator::begin(this->rootPrimitive, RBX::PrimIterator::SearchType::IN_ASSEMBLY);
+
+        while (it != RBX::PrimIterator::end(RBX::PrimIterator::SearchType::IN_ASSEMBLY)) {
+            RBX::Primitive* prim = *it;
+            RBX::IMoving* movingInterface = dynamic_cast<RBX::IMoving*>(prim->getBody());
+
+            if (movingInterface) {
+                movingInterface->notifyMoved();
+            }
+
+            ++it;
+        }
+    }
+
+    int Assembly::numMotors() const {
+        int count = 0;
+        RBX::Contact* jointToParent = dynamic_cast<RBX::Contact*>(getJointToParent(rootPrimitive));
+
+        if (jointToParent->getEdgeType() == RBX::Edge::EdgeType::JOINT) {
+            count = 1;
+        }
+
+        for (size_t i = 0; i < this->children.size(); ++i) {
+            count += this->children[i]->numMotors();
+        }
+
+        return count;
+    }
+
+    void Assembly::onPrimitiveCanSleepChanged(RBX::Primitive* p) {
+        this->canSleep.setDirty();
+    }
+
+    void Assembly::onPrimitivesChanged() {
+        this->maxRadius.setDirty();
+        this->canSleep.setDirty();
+        for (RBX::Assembly* i = this->parent; i; i = i->parent) {
+            i->maxRadius.setDirty();
+            i->canSleep.setDirty();
+        }
+    }
+
+    RBX::Assembly *Assembly::otherAssembly(RBX::Edge* edge) const {
+        RBX::Assembly* assembly = edge->getPrimitive(0)->getAssembly();
+        RBX::Assembly* assembly2 = edge->getPrimitive(1)->getAssembly();
+
+        if (assembly != this) {
+            return assembly;
+        }
+
+        return assembly2;
+    }
+
+    void Assembly::putInKernel(RBX::Kernel* kernel) {
+        this->putInStage(kernel); // inherited from IPipelined
+        kernel->insertBody(this->rootPrimitive->getBody());
+    }
+
+    void Assembly::removeFromKernel() {
+        RBX::Body* body = this->rootPrimitive->getBody();
+        RBX::Kernel* kernel = this->getKernel(); // inherited from IPipelined
+        kernel->removeBody(body);
+        this->removeFromKernel();
+    }
+
+    void Assembly::setParent(RBX::Assembly* newParent) {
+        RBX::Assembly* parent = this->parent;
+        if (newParent != parent) {
+            if (parent) {
+                newParent = this;
+                RBX::fastRemoveShort(&parent->children, &newParent);
+                parent->maxRadius.setDirty();
+                parent->canSleep.setDirty();
+                if (parent->parent) {
+                    parent->parent->onPrimitivesChanged();
+                }
+            }
+
+            this->parent = newParent;
+            if (newParent) {
+                newParent->addChild(this);
+            }
+
+            this->maxRadius.setDirty();
+            this->canSleep.setDirty();
+
+            if (this->parent) {
+                this->parent->onPrimitivesChanged();
+            }
+        }
+    }
+
+    void Assembly::stepUi(int uiStepId) {
+        int motors = this->numMotors();
+        int count = 0;
+
+        if (motors) {
+            int stepId = uiStepId;
+            do {
+                uiStepId = count;
+                RBX::MotorJoint motorImp = *this->getMotorImp(uiStepId);
+                motorImp.stepUi(stepId);
+                ++count;
+            } while (count < motors);
+        }
+    }
+
+    Assembly::~Assembly() {
+        RBX::PrimIterator it = RBX::PrimIterator::begin(this->rootPrimitive, RBX::PrimIterator::IN_ASSEMBLY);
+        while (it != RBX::PrimIterator::end(RBX::PrimIterator::IN_ASSEMBLY)) {
+            RBX::Primitive* prim =* it;
+            prim->setClump(NULL);
+            prim->setClumpDepth(-1);
+            ++it;
+        }
+
+        if (this->parent) {
+            RBX::fastRemoveShort(
+                &this->parent->children,
+                this
+            );
+        }
+
+        this->parent = NULL;
+
+        for (size_t j = 0; j < this->children.size(); ++j) {
+            this->children[j]->parent = NULL;
+        }
+
+        if (!this->children.empty()) {
+            delete(this->children.data());
+        }
+
+        this->children.clear();
+    }
+}
