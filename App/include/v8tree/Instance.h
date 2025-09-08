@@ -1,0 +1,94 @@
+namespace RBX {
+    class Instance {
+    private: 
+        RBX::Association<RBX::Instance> assoc;
+        RBX::Instance* parent;
+        RBX::CopyOnWrite<std::vector<boost::shared_ptr<RBX::Instance>,std::allocator<boost::shared_ptr<RBX::Instance> > > > children;
+        std::basic_string<char,std::char_traits<char>,std::allocator<char> > name;
+        bool archivable;
+        void predelete();
+        virtual void onLastChildRemoved();
+        void writeProperties(XmlElement*) const;
+        static void signalDescendentAdded(RBX::Instance*, RBX::Instance*, RBX::Instance*);
+        static void signalDescendentRemoving(const boost::shared_ptr<RBX::Instance>&, RBX::Instance*, RBX::Instance*);
+        static void predelete(RBX::Instance*);
+
+    protected: 
+        virtual bool askAddChild(const RBX::Instance*) const;
+        virtual bool askSetParent(const RBX::Instance*) const;
+        virtual void onAddListener(RBX::Listener<RBX::Instance,RBX::DescendentAdded>*) const;
+        virtual void onAddListener(RBX::Listener<RBX::Instance,RBX::ChildAdded>*) const;
+        virtual void onAncestorChanged(const RBX::AncestorChanged&);
+        virtual void onDescendentAdded(RBX::Instance*);
+        virtual void onDescendentRemoving(const boost::shared_ptr<RBX::Instance>&);
+        virtual void onChildAdded(RBX::Instance*);
+        virtual void onChildRemoving(RBX::Instance*);
+        virtual void onChildRemoved(RBX::Instance*);
+        virtual void readProperty(const XmlElement*, RBX::IReferenceBinder&);
+        virtual void* __vecDelDtor(uint32_t);
+        void raiseChanged(const RBX::Reflection::PropertyDescriptor&);
+        virtual void onChildChanged(RBX::Instance*, const RBX::PropertyChanged&);
+        Instance(const char*);
+        Instance();
+        virtual ~Instance();
+
+    public: 
+        Instance(const RBX::Instance&);
+        static RBX::Reflection::BoundProp<bool,1> propArchivable;
+        static const RBX::Reflection::PropDescriptor<RBX::Instance,std::basic_string<char,std::char_traits<char>,std::allocator<char> > > desc_Name;
+        static const RBX::Reflection::RefPropDescriptor<RBX::Instance,RBX::Instance> propParent;
+        static RBX::Reflection::SignalDesc<RBX::Instance,void __cdecl(boost::shared_ptr<RBX::Instance>)> event_childAdded;
+        static RBX::Reflection::SignalDesc<RBX::Instance,void __cdecl(boost::shared_ptr<RBX::Instance>)> event_childRemoved;
+        static RBX::Reflection::SignalDesc<RBX::Instance,void __cdecl(boost::shared_ptr<RBX::Instance>)> event_descendentAdded;
+        static RBX::Reflection::SignalDesc<RBX::Instance,void __cdecl(boost::shared_ptr<RBX::Instance>)> event_descendentRemoving;
+        static RBX::Reflection::SignalDesc<RBX::Instance,void __cdecl(boost::shared_ptr<RBX::Instance>)> event_ancestryChanged;
+        static RBX::Reflection::SignalDesc<RBX::Instance,void __cdecl(RBX::Reflection::PropertyDescriptor const *)> event_propertyChanged;
+        void remove();
+        const RBX::Association<RBX::Instance>& association() const;
+        RBX::Association<RBX::Instance>& association();
+        boost::shared_ptr<RBX::Instance> clone();
+        void removeAllChildren();
+        std::basic_string<char,std::char_traits<char>,std::allocator<char> > getClassNameStr() const;
+        void setParent(RBX::Instance*);
+        void setParent2(boost::shared_ptr<RBX::Instance>);
+        void promoteChildren();
+        const std::basic_string<char,std::char_traits<char>,std::allocator<char> >& getName() const;
+        virtual void setName(const std::basic_string<char,std::char_traits<char>,std::allocator<char> >&);
+        bool isAncestorOf(const RBX::Instance*) const;
+        bool isAncestorOf2(boost::shared_ptr<RBX::Instance>);
+        bool isDescendentOf2(boost::shared_ptr<RBX::Instance>);
+        bool isDescendentOf(const RBX::Instance*) const;
+        uint32_t numChildren() const;
+        int32_t findChildIndex(const RBX::Instance*) const;
+        const RBX::Instance* getChild(uint32_t) const;
+        RBX::Instance* getChild(uint32_t);
+        RBX::Instance* findFirstChildByName(const std::basic_string<char,std::char_traits<char>,std::allocator<char> >&) const;
+        RBX::Instance* findFirstChildByNameRecursive(const std::basic_string<char,std::char_traits<char>,std::allocator<char> >&) const;
+        boost::shared_ptr<RBX::Instance> findFirstChildByName2(std::basic_string<char,std::char_traits<char>,std::allocator<char> >, bool);
+        const RBX::CopyOnWrite<std::vector<boost::shared_ptr<RBX::Instance>,std::allocator<boost::shared_ptr<RBX::Instance> > > >& getChildren() const;
+        boost::shared_ptr<std::vector<boost::shared_ptr<RBX::Instance>,std::allocator<boost::shared_ptr<RBX::Instance> > > const > getChildren2();
+        bool canAddChild(const boost::shared_ptr<RBX::Instance>&) const;
+        bool canAddChild(const RBX::Instance*) const;
+        bool canSetParent(const RBX::Instance*) const;
+        RBX::Instance* getParent() const;
+        const RBX::Instance* getRootAncestor() const;
+        RBX::Instance* getRootAncestor();
+        bool contains(const RBX::Instance*) const;
+        virtual void onServiceProvider(const RBX::ServiceProvider*, const RBX::ServiceProvider*);
+        void readProperties(const XmlElement*, RBX::IReferenceBinder&);
+        virtual boost::shared_ptr<RBX::Instance> createChild(const RBX::Name&);
+        virtual XmlElement* write();
+        void writeChildren(XmlElement*);
+        XmlElement* writeDelete();
+        void read(const XmlElement*, RBX::IReferenceBinder&);
+        void readChildren(const XmlElement*, RBX::IReferenceBinder&);
+        void readChild(const XmlElement*, RBX::IReferenceBinder&);
+        void raisePropertyChanged(const RBX::Reflection::PropertyDescriptor&);
+        RBX::Instance& operator=(const RBX::Instance&);
+        void __local_vftable_ctor_closure();
+        static XmlElement* toNewXmlRoot(RBX::Instance*);
+        static boost::shared_ptr<RBX::Instance> fromXmlRoot(XmlElement*);
+        static RBX::Instance* getRootAncestor(RBX::Instance*);
+        static const RBX::Instance* getRootAncestor(const RBX::Instance*);
+    };
+}
