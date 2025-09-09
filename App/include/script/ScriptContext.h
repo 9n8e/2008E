@@ -1,3 +1,8 @@
+#pragma once
+
+#include <vector>
+#include <set>
+
 namespace RBX {
     class ScriptContext {
     private: 
@@ -6,10 +11,10 @@ namespace RBX {
         std::set<RBX::Script *,std::less<RBX::Script *>,std::allocator<RBX::Script *> > scripts;
         boost::posix_time::ptime nextPendingScripts;
         std::vector<boost::shared_ptr<RBX::Script>,std::allocator<boost::shared_ptr<RBX::Script> > > pendingScripts;
-        boost::shared_ptr<RBX::RunService> runService;
-        boost::scoped_ptr<RBX::Lua::YieldingThreads> yieldEvent;
+        // boost::shared_ptr<RBX::RunService> runService;
+        // boost::scoped_ptr<RBX::Lua::YieldingThreads> yieldEvent;
         bool scriptsDisabled;
-        boost::shared_ptr<RBX::Stats::Item> statsItem;
+        // boost::shared_ptr<RBX::Stats::Item> statsItem;
         void onChangedScriptEnabled(const RBX::Reflection::PropertyDescriptor&);
         void disassociateState(RBX::Script*);
         void openState();
@@ -38,7 +43,7 @@ namespace RBX {
         virtual void onEvent(const RBX::RunService*, RBX::RunTransition);
 
     public:
-        boost::scoped_ptr<LuaAllocator> allocator;
+        // boost::scoped_ptr<LuaAllocator> allocator;
         static RBX::Reflection::BoundProp<bool,1> propScriptsDisabled;
         ScriptContext(const RBX::ScriptContext&);
         ScriptContext();
