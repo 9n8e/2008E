@@ -4,7 +4,7 @@ namespace RBX {
         RBX::Association<RBX::Instance> assoc;
         RBX::Instance* parent;
         RBX::CopyOnWrite<std::vector<boost::shared_ptr<RBX::Instance>,std::allocator<boost::shared_ptr<RBX::Instance> > > > children;
-        std::basic_string<char,std::char_traits<char>,std::allocator<char> > name;
+        std::string name;
         bool archivable;
         void predelete();
         virtual void onLastChildRemoved();
