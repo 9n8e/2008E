@@ -1,3 +1,7 @@
+#include "lua.h"
+#include "lauxlib.h"
+#include "lualib.h"
+
 namespace RBX {
     namespace Lua {
         class ScopedPopper {
