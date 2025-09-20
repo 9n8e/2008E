@@ -9,7 +9,7 @@
 #include "include/v8datamodel/Message.h"
 
 namespace RBX {
-    class StandardOut {
+    class StandardOut: public boost::enable_shared_from_this<RBX::StandardOut>, public RBX::Notifier<RBX::StandardOut,RBX::StandardOutMessage> {
     public: 
         boost::mutex sync;
 
@@ -18,7 +18,7 @@ namespace RBX {
         StandardOut(const RBX::StandardOut&);
         StandardOut();
         virtual ~StandardOut();
-        
+
         RBX::StandardOut& operator=(const RBX::StandardOut&);
         static boost::shared_ptr<RBX::StandardOut> singleton();
         static void print_exception(const boost::function<void,std::allocator<boost::function_base> >&, RBX::MessageType, bool);
