@@ -3,6 +3,10 @@
 #include <exception>
 
 #include <boost/thread/mutex.hpp>
+#include <boost/function.hpp>
+#include <boost/shared_ptr.hpp>
+
+#include "include/v8datamodel/Message.h"
 
 namespace RBX {
     class StandardOut {
@@ -14,11 +18,9 @@ namespace RBX {
         StandardOut(const RBX::StandardOut&);
         StandardOut();
         virtual ~StandardOut();
+        
         RBX::StandardOut& operator=(const RBX::StandardOut&);
-        void __local_vftable_ctor_closure();
-        virtual void* __vecDelDtor(int);
-
         static boost::shared_ptr<RBX::StandardOut> singleton();
-        static void print_exception(const boost::function0<void,std::allocator<boost::function_base> >&, RBX::MessageType, bool);
+        static void print_exception(const boost::function<void,std::allocator<boost::function_base> >&, RBX::MessageType, bool);
     };
 };
