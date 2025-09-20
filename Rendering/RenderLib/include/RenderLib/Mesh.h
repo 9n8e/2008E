@@ -6,6 +6,34 @@
 #include "G3D/Pointer.h"
 
 namespace RBX::Render {
+    namespace Mesh {
+        class Level {
+        public: 
+            G3D::Array<unsigned int> indexArray;
+            G3D::RenderDevice::Primitive primitive;
+
+            void appendVertex(const G3D::Vector3&, const G3D::Vector3&, const G3D::Vector2&);
+            Level(const RBX::Render::Mesh::Level&);
+            Level();
+            Level(G3D::RenderDevice::Primitive);
+            virtual ~Level();
+            RBX::Render::Mesh::Level& operator=(const RBX::Render::Mesh::Level&);
+        };
+        class ShadowSurface {
+        public: 
+            G3D::Array<G3D::MeshAlg::Edge> edgeArray;
+            G3D::Array<G3D::Vector3> faceNormalArray;
+            G3D::Array<G3D::MeshAlg::Face> faceArray;
+            G3D::Array<G3D::Vector3> geometry;
+            G3D::ReferenceCountedPointer<Mesh::Level> dropShadowGeometry;
+
+            ShadowSurface(const Mesh::ShadowSurface&);
+            ShadowSurface();
+            ~ShadowSurface();
+            Mesh::ShadowSurface& operator=(const Mesh::ShadowSurface&);
+        };
+    };
+
     class Mesh : public G3D::ReferenceCountedObject {
     private: 
         static G3D::MeshAlg::Geometry visibleGeometry;
@@ -21,54 +49,36 @@ namespace RBX::Render {
         static G3D::Vector3 findScale;
         static G3D::Array<int> findGrid[32][32][32];
         static G3D::Array<int>& getFindGridCell(const G3D::Vector3&);
-        static uint32_t findVertex(const G3D::Array<int>&, const G3D::Vector3&, const G3D::Vector3&, const G3D::Vector2&);
-        static void toFindGridCoords(const G3D::Vector3&, int32_t&, int32_t&, int32_t&);
+        static int findVertex(const G3D::Array<int>&, const G3D::Vector3&, const G3D::Vector3&, const G3D::Vector2&);
+        static void toFindGridCoords(const G3D::Vector3&, int&, int&, int&);
         static void makeVAR();
         static void computeAABounds(const std::vector<G3D::ReferenceCountedPointer<RBX::Render::Chunk>,std::allocator<G3D::ReferenceCountedPointer<RBX::Render::Chunk> > >&, G3D::Vector3&, G3D::Vector3&);
 
     protected: 
-        G3D::Array<G3D::ReferenceCountedPointer<RBX::Render::Mesh::Level> > levels;
-        RBX::Render::Mesh::ShadowSurface shadowSurface;
-        int32_t detailIndex(double) const;
-        void computeShadowSurface(const G3D::ReferenceCountedPointer<RBX::Render::Mesh::Level>&);
+        G3D::Array<G3D::ReferenceCountedPointer<Mesh::Level> > levels;
+        Mesh::ShadowSurface shadowSurface;
+        int detailIndex(double) const;
+        void computeShadowSurface(const G3D::ReferenceCountedPointer<Mesh::Level>&);
         Mesh();
         static void initStatics();
 
     public:
-        Mesh(const RBX::Render::Mesh&);
+        Mesh(const Mesh&);
         virtual ~Mesh();
         float debugBoundingRadius;
-        G3D::ReferenceCountedPointer<RBX::Render::Mesh::Level> dropShadowMesh();
-        const G3D::ReferenceCountedPointer<RBX::Render::Mesh::Level> detailLevel(float) const;
+        G3D::ReferenceCountedPointer<Mesh::Level> dropShadowMesh();
+        const G3D::ReferenceCountedPointer<Mesh::Level> detailLevel(float) const;
         void computeDirectionalShadowVolume(const G3D::CoordinateFrame&, const G3D::Vector3&, G3D::Array<unsigned int>&, G3D::Array<G3D::Vector3>&, bool) const;
-        RBX::Render::Mesh& operator=(const RBX::Render::Mesh&);
-        void __local_vftable_ctor_closure();
-        virtual void* __vecDelDtor(uint32_t);
+        Mesh& operator=(const Mesh&);
         static void flushVAR();
-        static uint32_t allocVertex(uint32_t, uint32_t);
-        static uint32_t allocVertex(const G3D::Vector3&, const G3D::Vector3&, const G3D::Vector2&, bool);
-        static G3D::ReferenceCountedPointer<RBX::Render::Mesh> aggregate(const std::vector<G3D::ReferenceCountedPointer<RBX::Render::Chunk>,std::allocator<G3D::ReferenceCountedPointer<RBX::Render::Chunk> > >&, G3D::CoordinateFrame&, float&);
-        static void freeVertex(uint32_t);
-        static uint32_t findVertex(const G3D::Vector3&, const G3D::Vector3&, const G3D::Vector2&);
+        static int allocVertex(int, int);
+        static int allocVertex(const G3D::Vector3&, const G3D::Vector3&, const G3D::Vector2&, bool);
+        static G3D::ReferenceCountedPointer<Mesh> aggregate(const std::vector<G3D::ReferenceCountedPointer<RBX::Render::Chunk>,std::allocator<G3D::ReferenceCountedPointer<RBX::Render::Chunk> > >&, G3D::CoordinateFrame&, float&);
+        static void freeVertex(int);
+        static int findVertex(const G3D::Vector3&, const G3D::Vector3&, const G3D::Vector2&);
         static void setShadowVertex(const G3D::Vector3&);
         static void beginRender(G3D::RenderDevice*, bool, bool);
-        static void sendGeometry(const RBX::Render::Mesh::Level*, G3D::RenderDevice*);
+        static void sendGeometry(const Mesh::Level*, G3D::RenderDevice*);
         static void endRender(G3D::RenderDevice*);
     }; 
-
-    namespace Mesh {
-        class ShadowSurface {
-        public: 
-            G3D::Array<G3D::MeshAlg::Edge> edgeArray;
-            G3D::Array<G3D::Vector3> faceNormalArray;
-            G3D::Array<G3D::MeshAlg::Face> faceArray;
-            G3D::Array<G3D::Vector3> geometry;
-            G3D::ReferenceCountedPointer<RBX::Render::Mesh::Level> dropShadowGeometry;
-
-            ShadowSurface(const RBX::Render::Mesh::ShadowSurface&);
-            ShadowSurface();
-            ~ShadowSurface();
-            RBX::Render::Mesh::ShadowSurface& operator=(const RBX::Render::Mesh::ShadowSurface&);
-        };
-    };
 };
