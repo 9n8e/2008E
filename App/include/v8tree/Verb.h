@@ -24,6 +24,23 @@ namespace RBX {
         RBX::VerbContainer& operator=(const RBX::VerbContainer&);
     };
 
+    class VerbWidget : public Widget {
+    private: 
+        RBX::Verb* verb;
+
+    protected: 
+        RBX::Verb* getVerb();
+        virtual bool isEnabled();
+        virtual void onClick(const RBX::GuiEvent&);
+
+    public: 
+        VerbWidget(const RBX::VerbWidget&);
+        VerbWidget(RBX::Verb*);
+        VerbWidget();
+        virtual ~VerbWidget();
+        RBX::VerbWidget& operator=(const RBX::VerbWidget&);
+    };
+
     class Verb : public Debugable {
     private: 
         const RBX::Name& name;
