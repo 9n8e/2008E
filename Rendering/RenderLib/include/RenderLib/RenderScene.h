@@ -24,7 +24,7 @@ namespace RBX::Render {
         G3D::Array<unsigned int> shadowIndexArray;
 
         void updateShadowVAR(const G3D::Array<G3D::Vector3>&);
-        void computeShadowVolumeGeometry(G3D::Array<unsigned int>&, G3D::Array<G3D::Vector3>&, const G3D::GLight&, bool, float) const;
+        void computeShadowVolumeGeometry(G3D::Array<unsigned int>&, G3D::Array<G3D::Vector3>&, const G3D::GLight&, bool, float);
         void clearProxyArrays();
         void allocateProxies(G3D::RenderDevice*, const G3D::GCamera&);
         void classifyProxies();

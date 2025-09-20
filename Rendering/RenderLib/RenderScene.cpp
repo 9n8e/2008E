@@ -1,4 +1,8 @@
+#pragma once
+
 #include "RenderLib/include/RenderLib/RenderScene.h"
+
+#include "G3D/Stopwatch.h"
 
 namespace RBX::Render {
     void RenderScene::classifyProxies() {
@@ -10,11 +14,23 @@ namespace RBX::Render {
                         if (this->proxyArray[v2]->material->mReflect > 0.0) {
                             this->reflectProxyArray.append(this->proxyArray[v2]);
                         }
-                    } else {
+                    } else { // if no transparency (typically through 0,0,0/black)
                         this->transparentProxyArray.append(this->proxyArray[v2]);
                     }
                 }
             }
         }
+    }
+
+    void RenderScene::computeShadowVolumeGeometry(
+        G3D::Array<unsigned int>& indexArray,
+        G3D::Array<G3D::Vector3>& shadowVertex,
+        const G3D::GLight& light,
+        bool generateLightCap,
+        float shadowVertextDistance
+    ) {
+        this->renderStats.cpuShadow->tick();
+        shadowVertex.resize(0, 0);
+        indexArray.resize(0, 0);
     }
 };
