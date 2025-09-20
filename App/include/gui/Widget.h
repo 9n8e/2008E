@@ -1,5 +1,7 @@
 #pragma once
 
+#include "gui/Gui.h"
+
 #include "G3D/Color4.h"
 
 namespace RBX {

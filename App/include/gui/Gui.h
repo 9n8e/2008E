@@ -1,10 +1,8 @@
-namespace RBX {
-    class GuiEvent {
-    public: 
-        RBX::IDataState* iDataState;
-        GuiEvent(const RBX::UIEvent&, RBX::IDataState*);
-    };
+#pragma once
 
+#include "gui/GuiEvent.h"
+
+namespace RBX {
     class GuiTarget {
     public:
         virtual RBX::GuiResponse process(const RBX::GuiEvent&);
