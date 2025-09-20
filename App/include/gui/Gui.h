@@ -1,4 +1,18 @@
 namespace RBX {
+    class GuiEvent {
+    public: 
+        RBX::IDataState* iDataState;
+        GuiEvent(const RBX::UIEvent&, RBX::IDataState*);
+    };
+
+    class GuiTarget {
+    public:
+        virtual RBX::GuiResponse process(const RBX::GuiEvent&);
+        GuiTarget(const RBX::GuiTarget&);
+        GuiTarget();
+        RBX::GuiTarget& operator=(const RBX::GuiTarget&);
+    };
+
     class GuiResponse {
     public: 
         bool wasUsed();
