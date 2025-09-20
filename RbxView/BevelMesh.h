@@ -1,4 +1,4 @@
-namespace RBX::View {
+namespace RBX::View { //
     class BevelMesh {
     public:
         BevelMesh(const RBX::View::BevelMesh&);
