@@ -18,7 +18,7 @@ namespace RBX {
         RBX::Creatable<RBX::Instance>& operator=(const RBX::Creatable<RBX::Instance>&);
 
     private: 
-        static void* operator new(uint32_t);
+        static void* operator new(int);
         static void operator delete(void*);
     };
 }
