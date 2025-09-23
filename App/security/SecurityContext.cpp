@@ -10,12 +10,12 @@ void RBX::Security::Context::requirePermission(RBX::Security::Permissions permis
             formatStream << operation;
             formatted = formatStream.str();
 
-            std::runtime_error pExceptionObject = std::runtime_error::runtime_error(formatted);
+            std::runtime_error pExceptionObject = std::runtime_error(formatted);
             throw pExceptionObject;
         }
 
         std::string formatted = "The current security context cannot perform the requested operation";
-        std::runtime_error pExceptionObject = std::runtime_error::runtime_error(formatted);
+        std::runtime_error pExceptionObject = std::runtime_error(formatted);
         throw pExceptionObject;
     }
 }
